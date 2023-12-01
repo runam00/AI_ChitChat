@@ -1,6 +1,8 @@
 import customtkinter as ct
 from PIL import Image, ImageTk
 
+from ..callbacks.button_callback import sidebar_button_callback
+
 from ..theme.strings import UIString
 from ..theme.sizes import SidebarButton
 from ..theme.colors import BrandColor
@@ -18,10 +20,11 @@ class SidebarFrame(ct.CTkFrame):
             text=UIString.TOP,
             width=SidebarButton.WIDTH,
             height=SidebarButton.HEIGHT,
-            fg_color=get_button_color(),
+            fg_color='transparent',
             hover_color=BrandColor.GRAY,
             image=top_icon,
             compound='top',
+            command=lambda: sidebar_button_callback(master, UIString.TOP)
         )
         self.button_home.grid(row=0, column=0, padx=10, pady=(20, 10), sticky='ew')
 
@@ -33,7 +36,7 @@ class SidebarFrame(ct.CTkFrame):
             text=UIString.CHAT,
             width=SidebarButton.WIDTH,
             height=SidebarButton.HEIGHT,
-            fg_color=get_button_color(),
+            fg_color='transparent',
             hover_color=BrandColor.GRAY,
             image=chat_icon,
             compound='top',

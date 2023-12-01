@@ -1,6 +1,6 @@
 import customtkinter as ct
 
-from .sidebar_frame import SidebarFrame
+from .frames.main_windowframe import MainWindowFrame
 
 class App(ct.CTk):
     def __init__(self):
@@ -12,6 +12,6 @@ class App(ct.CTk):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        # サイドバー
-        self.sidebar_frame = SidebarFrame(self, fg_color='#222831')
-        self.sidebar_frame.grid(row=0, column=0, padx=0, pady=0, sticky='nsew')
+        # メインフレーム
+        self.main_frame = MainWindowFrame(master=self)
+        self.main_frame.grid(row=0, column=0, padx=0, pady=0, sticky='nsew')
