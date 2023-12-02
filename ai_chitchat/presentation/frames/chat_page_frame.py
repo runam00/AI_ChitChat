@@ -1,6 +1,6 @@
 import customtkinter as ct
 
-class TopMainFrame(ct.CTkFrame):
+class ChatPageFrame(ct.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
