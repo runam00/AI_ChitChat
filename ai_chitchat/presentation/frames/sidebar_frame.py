@@ -9,7 +9,7 @@ from ..theme.colors import BrandColor
 from ..theme.images import BrandImage
 
 class SidebarFrame(ct.CTkFrame):
-    def __init__(self, parent, **kwargs):
+    def __init__(self, master, parent, **kwargs):
         super().__init__(parent, **kwargs)
 
         # トップボタン
@@ -24,7 +24,7 @@ class SidebarFrame(ct.CTkFrame):
             hover_color=BrandColor.GRAY,
             image=top_icon,
             compound='top',
-            command=lambda: sidebar_button_callback(parent, UIString.TOP)
+            command=lambda: sidebar_button_callback(master, UIString.TOP)
         )
         self.button_home.grid(row=0, column=0, padx=10, pady=(20, 10), sticky='ew')
 
@@ -40,5 +40,6 @@ class SidebarFrame(ct.CTkFrame):
             hover_color=BrandColor.GRAY,
             image=chat_icon,
             compound='top',
+            command=lambda: sidebar_button_callback(master, UIString.CHAT)
         )
         self.button_chat.grid(row=1, column=0, padx=10, pady=10, sticky='ew')

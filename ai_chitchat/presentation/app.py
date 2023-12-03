@@ -22,11 +22,21 @@ class App(ct.CTk):
         # メインフレーム
         self.main_frame = MainWindowFrame(master=self)
         self.main_frame.grid(row=0, column=0, padx=0, pady=0, sticky='nsew')
+        self.main_frames = self.main_frame.get_mainframes()
 
 
     def init_states(self):
-        self._button_state = ButtonState(UIString.TOP)
+        self._button_state = ButtonState(selected=UIString.TOP)
 
 
     def get_button_state(self):
         return self._button_state
+
+
+    def get_mainframes(self):
+        return self.main_frames
+
+
+    def change_mainframe(self, frame):
+        '''フレームを前面に表示する'''
+        frame.tkraise()
