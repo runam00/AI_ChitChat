@@ -6,3 +6,4 @@ class ChatPageFrame(ct.CTkFrame):
 
         # アプリタイトル
         self.label = ct.CTkLabel(self, text='chat frame')
+        self.label.pack()

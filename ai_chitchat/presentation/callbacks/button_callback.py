@@ -4,5 +4,4 @@ def sidebar_button_callback(master, selected: str):
     button_state.update_selected(selected)
 
     # 画面遷移
-    mainframes = master.get_mainframes()
-    master.change_mainframe(flame=mainframes[selected])
+    master.change_mainframe(frame_name=selected)
