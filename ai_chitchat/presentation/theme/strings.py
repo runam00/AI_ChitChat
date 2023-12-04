@@ -1,6 +1,4 @@
-from enum import Enum
-
-class UIString(Enum):
+class UIString():
     # メインフレーム
     TITLE = 'AI ChitChat'
     TAB_GENERATE = '作成'
@@ -13,8 +11,3 @@ class UIString(Enum):
     # サイドバー
     TOP = 'TOP'
     CHAT = 'CHAT'
-
-
-    @classmethod
-    def get_values(cls) -> list:
-        return [i.value for i in cls]

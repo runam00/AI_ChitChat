@@ -15,7 +15,7 @@ class App(ct.CTk):
         self.init_states()
         self.build_ui()
         # 起動時にトップページを表示
-        # self.change_mainframe(UIString.TOP)
+        self.change_mainframe(UIString.TOP)
 
 
     def build_ui(self):
@@ -44,12 +44,12 @@ class App(ct.CTk):
 
         # メインフレームを生成
         self._mainframes = {
-            UIString.TOP: TopPageFrame(parent=self.mainframe_area), 
+            UIString.TOP: TopPageFrame(parent=self.mainframe_area, fg_color=BrandColor.GRAY), 
             UIString.CHAT: ChatPageFrame(parent=self.mainframe_area)
         }
         # メインフレームを全て設置する
         for frame in self._mainframes.values():
-            frame.place()
+            frame.grid(row=0, column=0, padx=0, pady=0, sticky='nsew')
 
 
     def init_states(self):
