@@ -11,11 +11,14 @@ from .theme.colors import BrandColor
 class App(ct.CTk):
     def __init__(self):
         super().__init__()
+        
+        self.__current_mainframe: str = None  # 現在表示しているメインフレームの名前
+        self.__mainframes: dict[str: ct.CTkFrame] = {}  # 画面遷移で使用するためのメインフレーム
 
-        self.init_states()
+        # UIを表示
         self.build_ui()
         # 起動時にトップページを表示
-        self.change_mainframe(UIString.TOP)
+        self.show_frame(UIString.TOP)
 
 
     def build_ui(self):
@@ -39,13 +42,13 @@ class App(ct.CTk):
         self.sidebar_frame = SidebarFrame(
             master=self,
             parent=self.sidebar_area,
-            fg_color=BrandColor.DARK_GRAY, 
+            fg_color=BrandColor.DARK_GRAY,
             corner_radius=0
         )
         self.sidebar_frame.pack(expand=True, fill=tk.BOTH, padx=0, pady=0)
 
         # メインフレームを生成
-        self._mainframes = {
+        self.mainframes = {
             # トップページのメインフレーム
             UIString.TOP: TopPageFrame(
                 parent=self.mainframe_area,
@@ -60,19 +63,30 @@ class App(ct.CTk):
             )
         }
         # メインフレームを全て設置する
-        for frame in self._mainframes.values():
+        for frame in self.mainframes.values():
             frame.grid(row=0, column=0, padx=0, pady=0, sticky='nsew')
 
 
-    def init_states(self):
-        self._button_state = ButtonState(selected=UIString.TOP)
-
-
-    def get_button_state(self):
-        return self._button_state
-
-
-    def change_mainframe(self, frame_name: str):
-        '''フレームを前面に表示する'''
-        frame = self._mainframes[frame_name]
+    def show_frame(self, frame_name: str):
+        frame = self.mainframes[frame_name]
         frame.tkraise()
+
+
+    @property
+    def current_mainframe(self):
+        return self.__current_mainframe
+
+
+    @current_mainframe.setter
+    def current_mainframe(self, current_mainframe):
+        self.__current_mainframe = current_mainframe
+
+
+    @property
+    def mainframes(self):
+        return self.__mainframes
+
+
+    @mainframes.setter
+    def mainframes(self, mainframes):
+        self.__mainframes = mainframes
