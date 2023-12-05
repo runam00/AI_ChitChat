@@ -32,11 +32,13 @@ class App(ct.CTk):
         # メインフレーム設置用スペース
         self.mainframe_area = ct.CTkFrame(master=self, corner_radius=0)
         self.mainframe_area.grid(row=0, column=1, padx=0, pady=0, sticky='nsew')
+        self.mainframe_area.columnconfigure(0, weight=1)
+        self.mainframe_area.rowconfigure(0, weight=1)
 
         # サイドバーのフレームを設置
         self.sidebar_frame = SidebarFrame(
-            master=self, 
-            parent=self.sidebar_area, 
+            master=self,
+            parent=self.sidebar_area,
             fg_color=BrandColor.DARK_GRAY, 
             corner_radius=0
         )
@@ -44,8 +46,18 @@ class App(ct.CTk):
 
         # メインフレームを生成
         self._mainframes = {
-            UIString.TOP: TopPageFrame(parent=self.mainframe_area, fg_color=BrandColor.GRAY), 
-            UIString.CHAT: ChatPageFrame(parent=self.mainframe_area)
+            # トップページのメインフレーム
+            UIString.TOP: TopPageFrame(
+                parent=self.mainframe_area,
+                fg_color=BrandColor.GRAY,
+                corner_radius=0
+            ), 
+            # チャットページのメインフレーム
+            UIString.CHAT: ChatPageFrame(
+                parent=self.mainframe_area,
+                fg_color=BrandColor.GRAY,
+                corner_radius=0
+            )
         }
         # メインフレームを全て設置する
         for frame in self._mainframes.values():
