@@ -12,8 +12,6 @@ class App(ct.CTk):
     def __init__(self):
         super().__init__()
         
-        # self.current_mainframe: str = None  # 現在表示しているメインフレームの名前
-        # self.mainframes: dict[str: ct.CTkFrame] = {}  # 画面遷移で使用するためのメインフレーム
         self.frame_state = FrameState()  # フレームに関する状態を管理する
         self.frame_state.current_mainframe = UIString.TOP  # 初期値はトップページ
 
