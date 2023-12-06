@@ -1,6 +1,9 @@
 import customtkinter as ct
 
 from ..theme.strings import UIString
+from ..theme.colors import BrandColor
+from ..theme.sizes import TopFrameSize
+from ..theme.fonts import TopFrameFont
 
 class TopPageFrame(ct.CTkFrame):
     def __init__(self, parent, **kwargs):
@@ -8,73 +11,86 @@ class TopPageFrame(ct.CTkFrame):
 
         # 1×3でグリッドを設定
         self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=0)
+        self.rowconfigure(1, weight=0)
+        self.rowconfigure(2, weight=0)
+
+        # アプリタイトル
+        self.label = ct.CTkLabel(
+            self,
+            text=UIString.TITLE,
+            font=TopFrameFont.TITLE,
+            text_color=BrandColor.WHITE
+        )
+        self.label.grid(row=0, column=0, padx=0, pady=(110, 50))
+
+        # タブ
+        self.tabs = ct.CTkTabview(
+            self,
+            width=TopFrameSize.TAB_WIDTH,
+            fg_color=BrandColor.GRAY,
+            segmented_button_fg_color=BrandColor.GRAY,
+            segmented_button_selected_color=BrandColor.BLUE,
+            segmented_button_selected_hover_color=BrandColor.BLUE,
+            segmented_button_unselected_color=BrandColor.DARK_GRAY,
+            segmented_button_unselected_hover_color=BrandColor.BLUE,
+            text_color=BrandColor.WHITE,
+        )
+        self.tabs._segmented_button.configure(font=TopFrameFont.TAB_BUTTON)
+        self.tabs.grid(row=1, column=0, padx=0, pady=0)
+        self.tabs.add(UIString.TAB_GENERATE)  # 作成タブ
+        self.tabs.add(UIString.TAB_GALLERY)  # ギャラリータブ
+
+        # [作成]説明文
+        self.description = ct.CTkLabel(
+            self.tabs.tab(UIString.TAB_GENERATE),
+            text_color=BrandColor.LIGHT_GRAY,
+            text=UIString.GENERATE_DESCRIPTION,
+            font=TopFrameFont.DESCRIPTION
+        )
+        self.description.grid(row=0, column=0, padx=0, pady=(10, 15))
+
+        # [作成]テキストボックス
+        self.text_box = ct.CTkTextbox(
+            self.tabs.tab(UIString.TAB_GENERATE),
+            width=TopFrameSize.TEXT_BOX_WIDTH,
+            height=TopFrameSize.TEXT_BOX_HEIGHT,
+            padx = 12,
+            pady = 8,
+            fg_color=BrandColor.DARK_GRAY,
+            text_color=BrandColor.WHITE,
+            font=TopFrameFont.TEXT_BOX
+        )
+        self.text_box.grid(row=1, column=0, padx=0, pady=(0, 0))
+
+        # ボタン
+        self.button = ct.CTkButton(
+            self,
+            width=TopFrameSize.BUTTON_WIDTH,
+            height=TopFrameSize.BUTTON_HEIGHT,
+            font=TopFrameFont.BUTTON,
+            fg_color=BrandColor.BLUE
+        )
+        self.button.grid(row=2, column=0, padx=0, pady=(20, 60))
+
+
+class GenerateTabFrame(ct.CTkFrame):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
+
+        # 1×2でグリッドを設定
+        self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
 
-        # アプリタイトル
-        self.label = ct.CTkLabel(self, text=UIString.TITLE)
-        self.label.grid(row=0, column=0, padx=0, pady=0, sticky='nsew')
-
-        # # タブ
-        # self.tabs = ct.CTkTabview(master=self)
-        # self.tabs.grid(row=1, column=0, padx=0, pady=0, sticky='nsew')
-
-        # self.tabs.add(UIString.GENERATE)
-        # self.tabs.add(UIString.TAB_GALLERY)
-
-        # # 画面遷移で使用するフレームの辞書
-        # self.generate_tab_frames: dict[str, ct.CTkFrame] = {}
-
-        # # 「作成」タブ内のフレーム
-        # self.generate_tab = GenerateTabFrame(parent=self.tabs.tab(UIString.GENERATE))
-        # self.generate_tab_frames['not generated'] = self.generate_tab
-        # # 「作成」タブ内で、生成された画像で決定するか確認するフレーム
-        # self.generate_confirmation_tab = GenerateTabConfirmationFrame(parent=self.tabs.tab(UIString.GENERATE))
-        # self.generate_tab_frames['generated'] = self.generate_confirmation_tab
+        # テキストボックス
+        self.text_box = ct.CTkTextbox(self)
+        self.text_box.grid(row=0, column=0, padx=0, pady=0, sticky='nsew')
 
 
-# class GenerateTabFrame(ct.CTkFrame):
-#     def __init__(self, parent, **kwargs):
-#         super().__init__(parent, **kwargs)
+class GalleryTabFrame(ct.CTkFrame):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
 
-#         # 1×2でグリッドを設定
-#         self.columnconfigure(0, weight=1)
-#         self.rowconfigure(0, weight=1)
-#         self.rowconfigure(1, weight=1)
-
-#         # テキストボックス
-#         self.text_box = ct.CTkTextbox(master=self)
-#         self.text_box.grid(row=0, column=0, padx=0, pady=0, sticky='nsew')
-        
-#         # 生成ボタン
-#         self.button = ct.CTkButton(master=self)
-#         self.button.grid(row=1, column=0, padx=0, pady=0, sticky='nsew')
-
-
-# class GenerateTabConfirmationFrame(ct.ctk_tk):
-#     def __init__(self, parent, **kwargs):
-#         super().__init__(parent, **kwargs)
-
-#         # 1×2でグリッドを設定
-#         self.columnconfigure(0, weight=1)
-#         self.rowconfigure(0, weight=1)
-#         self.rowconfigure(1, weight=1)
-
-
-# class GalleryTabFrame(ct.CTkFrame):
-#     def __init__(self, parent, **kwargs):
-#         super().__init__(parent, **kwargs)
-
-#         # 1×2でグリッドを設定
-#         self.columnconfigure(0, weight=1)
-#         self.rowconfigure(0, weight=1)
-#         self.rowconfigure(1, weight=1)
-
-
-# class TabButton(ct.CTkButton):
-#     def __init__(self, parent, text, callback, **kwargs):
-#         super().__init__(parent, **kwargs)
-#         self.button = ct.CTkButton(
-#             master=self,
-#         )
-#         self.button.pack()
+        self.button = ct.CTkButton(self, text='決定')
+        self.button.grid(row=0, column=0)

@@ -2,7 +2,7 @@ import customtkinter as ct
 from PIL import Image, ImageTk
 
 from ..theme.strings import UIString
-from ..theme.sizes import SidebarButton
+from ..theme.sizes import SidebarButtonSize
 from ..theme.colors import BrandColor
 from ..theme.images import BrandImage
 
@@ -18,8 +18,8 @@ class SidebarFrame(ct.CTkFrame):
         self.home_button = ct.CTkButton(
             self,
             text=UIString.TOP,
-            width=SidebarButton.WIDTH,
-            height=SidebarButton.HEIGHT,
+            width=SidebarButtonSize.WIDTH,
+            height=SidebarButtonSize.HEIGHT,
             hover_color=BrandColor.GRAY,
             image=self.generate_icon(BrandImage.TOP_BUTTON),
             compound='top',
@@ -32,8 +32,8 @@ class SidebarFrame(ct.CTkFrame):
         self.chat_button = ct.CTkButton(
             self,
             text=UIString.CHAT,
-            width=SidebarButton.WIDTH,
-            height=SidebarButton.HEIGHT,
+            width=SidebarButtonSize.WIDTH,
+            height=SidebarButtonSize.HEIGHT,
             hover_color=BrandColor.GRAY,
             image=self.generate_icon(BrandImage.CHAT_BUTTON),
             compound='top',

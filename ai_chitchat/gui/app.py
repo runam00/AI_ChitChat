@@ -23,7 +23,7 @@ class App(ct.CTk):
 
     def build_ui(self):
         self.title('AI_ChitChat')
-        self.geometry('1200x600')
+        self.geometry('1200x650')
 
         # 2×1でグリッドを設定
         self.grid_columnconfigure(1, weight=1)

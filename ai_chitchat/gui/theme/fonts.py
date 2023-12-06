@@ -1,0 +1,11 @@
+DEFAULT_FONT = 'meiryo'
+
+class SidebarFont:
+    BUTTON = (DEFAULT_FONT, 15)
+
+class TopFrameFont:
+    TITLE = (DEFAULT_FONT, 70)
+    TAB_BUTTON = (DEFAULT_FONT, 15)
+    DESCRIPTION = (DEFAULT_FONT, 18)
+    TEXT_BOX = (DEFAULT_FONT, 18)
+    BUTTON = (DEFAULT_FONT, 20)
