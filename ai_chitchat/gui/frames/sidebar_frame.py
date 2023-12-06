@@ -1,19 +1,18 @@
 import customtkinter as ct
 from PIL import Image, ImageTk
 
-from ..callbacks.button_callback import sidebar_button_callback
-
 from ..theme.strings import UIString
 from ..theme.sizes import SidebarButton
 from ..theme.colors import BrandColor
 from ..theme.images import BrandImage
 
 class SidebarFrame(ct.CTkFrame):
-    def __init__(self, master, parent, **kwargs):
+    def __init__(self, root, parent, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.master = master
+        self.root = root
         self._buttons: dict[str: ct.CTkButton] = {}
+        self.current_mainframe_name: str = self.root.get_current_mainframe_name()
 
         # トップボタン
         self.home_button = ct.CTkButton(
@@ -21,11 +20,10 @@ class SidebarFrame(ct.CTkFrame):
             text=UIString.TOP,
             width=SidebarButton.WIDTH,
             height=SidebarButton.HEIGHT,
-            bg_color=BrandColor.GRAY,
             hover_color=BrandColor.GRAY,
             image=self.generate_icon(BrandImage.TOP_BUTTON),
             compound='top',
-            command=lambda: sidebar_button_callback(self, self.master, UIString.TOP)
+            command=lambda: self.button_callback(UIString.TOP)
         )
         self._buttons[UIString.TOP] = self.home_button
         self.home_button.grid(row=0, column=0, padx=10, pady=(20, 10), sticky='ew')
@@ -36,23 +34,26 @@ class SidebarFrame(ct.CTkFrame):
             text=UIString.CHAT,
             width=SidebarButton.WIDTH,
             height=SidebarButton.HEIGHT,
-            bg_color=BrandColor.GRAY,
             hover_color=BrandColor.GRAY,
             image=self.generate_icon(BrandImage.CHAT_BUTTON),
             compound='top',
-            command=lambda: sidebar_button_callback(self, self.master, UIString.CHAT)
+            command=lambda: self.button_callback(UIString.CHAT)
         )
         self._buttons[UIString.CHAT] = self.chat_button
         self.chat_button.grid(row=1, column=0, padx=10, pady=10, sticky='ew')
 
         # ボタンの色を設定
-        self.set_buttons_color()
+        self.set_buttons_color(self.current_mainframe_name)
 
 
-    def set_buttons_color(self):
+    def generate_icon(self, image_path: str):
+        '''ボタンに設定するアイコン画像を出力する'''
+        image = Image.open(image_path)
+        return ImageTk.PhotoImage(image)
+
+
+    def set_buttons_color(self, selected: str):
         '''ボタンの選択状態によって、ボタンの色を変える'''
-        self.button_state = self.master.get_button_state()
-        selected = self.button_state.selected()
         for button_text, button in self._buttons.items():
             # 選択状態にあるならグレー
             if selected == button_text:
@@ -63,15 +64,12 @@ class SidebarFrame(ct.CTkFrame):
             button.configure(fg_color=color)
 
 
-    def button_callback(self, parent_frame, master, selected: str):
+    def button_callback(self, selected: str):
+        # フレームの選択状態を更新する
+        self.root.update_current_mainframe_name(selected)
+
         # ボタンの色を更新
-        parent_frame.set_buttons_color()
+        self.set_buttons_color(selected)
 
         # 画面遷移
-        master.change_mainframe(frame_name=selected)
-
-
-    def generate_icon(self, image_path: str):
-        '''ボタンに設定するアイコン画像を出力する'''
-        image = Image.open(image_path)
-        return ImageTk.PhotoImage(image)
+        self.root.show_frame(selected)
