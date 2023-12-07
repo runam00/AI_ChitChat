@@ -1,9 +1,11 @@
 import customtkinter as ct
+from PIL import Image
 
 from ..theme.strings import UIString
 from ..theme.colors import BrandColor
 from ..theme.sizes import TopFrameSize
 from ..theme.fonts import TopFrameFont
+from ..theme.images import GalleryImagePath
 
 class TopPageFrame(ct.CTkFrame):
     def __init__(self, parent, **kwargs):
@@ -44,8 +46,10 @@ class TopPageFrame(ct.CTkFrame):
         self.tabs.add(UIString.TAB_GENERATE)  # 作成タブ
         self.tabs.add(UIString.TAB_GALLERY)  # ギャラリータブ
 
-        self.frame_generate = GenerateTabFrame(self.tabs.tab(UIString.TAB_GENERATE), fg_color=BrandColor.GRAY)
+        self.frame_generate = TabGenerateFrame(self.tabs.tab(UIString.TAB_GENERATE), fg_color=BrandColor.GRAY)
         self.frame_generate.pack()
+        self.frame_gallery = TabGalleryFrame(self.tabs.tab(UIString.TAB_GALLERY), fg_color=BrandColor.GRAY)
+        self.frame_gallery.pack()
 
         # ボタン
         self.button = ct.CTkButton(
@@ -71,7 +75,7 @@ class TopPageFrame(ct.CTkFrame):
         self.change_button_text()
 
 
-class GenerateTabFrame(ct.CTkFrame):
+class TabGenerateFrame(ct.CTkFrame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -103,9 +107,22 @@ class GenerateTabFrame(ct.CTkFrame):
         self.text_box.grid(row=1, column=0, padx=0, pady=(0, 0))
 
 
-class GalleryTabFrame(ct.CTkFrame):
+class TabGalleryFrame(ct.CTkFrame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.button = ct.CTkButton(self, text='決定')
-        self.button.grid(row=0, column=0)
+        # 3×3でグリッドを設定
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
+        self.columnconfigure(2, weight=1)
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        self.rowconfigure(2, weight=1)
+
+        self.gallery_images = GalleryImagePath.get_values()
+        self.index = 0
+        for row in range(3):
+            for col in range(3):
+                image = ct.CTkImage(Image.open(self.gallery_images[self.index]))
+                # image_frame = ct.CTkFrame(self, image=image)
+                # image_frame.grid(row=row, column=col)

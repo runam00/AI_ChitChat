@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 from ..theme.strings import UIString
 from ..theme.sizes import SidebarButtonSize
 from ..theme.colors import BrandColor
-from ..theme.images import BrandImage
+from ..theme.images import BrandImagePath
 
 class SidebarFrame(ct.CTkFrame):
     def __init__(self, root, parent, **kwargs):
@@ -21,7 +21,7 @@ class SidebarFrame(ct.CTkFrame):
             width=SidebarButtonSize.WIDTH,
             height=SidebarButtonSize.HEIGHT,
             hover_color=BrandColor.GRAY,
-            image=self.generate_icon(BrandImage.TOP_BUTTON),
+            image=self.generate_icon(BrandImagePath.TOP_BUTTON),
             compound='top',
             command=lambda: self.button_callback(UIString.TOP)
         )
@@ -35,7 +35,7 @@ class SidebarFrame(ct.CTkFrame):
             width=SidebarButtonSize.WIDTH,
             height=SidebarButtonSize.HEIGHT,
             hover_color=BrandColor.GRAY,
-            image=self.generate_icon(BrandImage.CHAT_BUTTON),
+            image=self.generate_icon(BrandImagePath.CHAT_BUTTON),
             compound='top',
             command=lambda: self.button_callback(UIString.CHAT)
         )
@@ -48,8 +48,7 @@ class SidebarFrame(ct.CTkFrame):
 
     def generate_icon(self, image_path: str):
         '''ボタンに設定するアイコン画像を出力する'''
-        image = Image.open(image_path)
-        return ImageTk.PhotoImage(image)
+        return ct.CTkImage(Image.open(image_path))
 
 
     def set_buttons_color(self, selected: str):
