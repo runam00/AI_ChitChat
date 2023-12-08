@@ -26,7 +26,7 @@ class TopPageFrame(ct.CTkFrame):
             font=TopFrameFont.TITLE,
             text_color=BrandColor.WHITE
         )
-        self.label.grid(row=0, column=0, padx=0, pady=(90, 30))
+        self.label.grid(row=0, column=0, padx=0, pady=(90, 40))
 
         # タブ
         self.tabs = ct.CTkTabview(
@@ -47,7 +47,7 @@ class TopPageFrame(ct.CTkFrame):
         self.tabs.add(UIString.TAB_GENERATE)
         self.tabs.add(UIString.TAB_GALLERY)
 
-        # タブボタンの横幅を調整
+        # タブボタンの横幅をスペースで調整
         self._tab_segmented_buttons_dict = self.tabs._segmented_button._buttons_dict
         self._tab_segmented_buttons_dict[UIString.TAB_GENERATE].configure(text=f'　　 {UIString.TAB_GENERATE} 　　')
         self._tab_segmented_buttons_dict[UIString.TAB_GALLERY].configure(text=f'　{UIString.TAB_GALLERY}　')
@@ -57,13 +57,13 @@ class TopPageFrame(ct.CTkFrame):
             self.tabs.tab(UIString.TAB_GENERATE),
             fg_color=BrandColor.GRAY
         )
-        self.frame_generate.pack()
+        self.frame_generate.pack(expand=True)
         # ギャラリータブ
         self.frame_gallery = TabGalleryFrame(
             self.tabs.tab(UIString.TAB_GALLERY),
             fg_color=BrandColor.GRAY
         )
-        self.frame_gallery.pack()
+        self.frame_gallery.pack(expand=True)
 
         # ボタン
         self.button = ct.CTkButton(
@@ -74,7 +74,7 @@ class TopPageFrame(ct.CTkFrame):
             font=TopFrameFont.BUTTON,
             fg_color=BrandColor.BLUE
         )
-        self.button.grid(row=2, column=0, padx=0, pady=(0, 30))
+        self.button.grid(row=2, column=0, padx=0, pady=(10, 30))
 
 
     def change_button_text(self):
@@ -87,7 +87,6 @@ class TopPageFrame(ct.CTkFrame):
     def button_callback(self, button):
         current_name: str = button.get()
         self._current_name = current_name.strip()
-        print(self._current_name)
         self.change_button_text()
 
 
@@ -107,7 +106,7 @@ class TabGenerateFrame(ct.CTkFrame):
             text=UIString.GENERATE_DESCRIPTION,
             font=TopFrameFont.DESCRIPTION
         )
-        self.description.grid(row=0, column=0, padx=0, pady=(20, 15))
+        self.description.grid(row=0, column=0, padx=0, pady=(0, 20))
 
         # テキストボックス
         self.text_box = ct.CTkTextbox(
@@ -154,7 +153,7 @@ class TabGalleryFrame(ct.CTkFrame):
                     command=lambda i=self._count: self.button_callback(i)
                 )
                 self._images.append(image_button)
-                image_button.grid(row=row, column=col, padx=5, pady=5)
+                image_button.grid(row=row, column=col, padx=7, pady=8)
                 self._count += 1
 
 
