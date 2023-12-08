@@ -4,6 +4,7 @@ class SidebarButtonSize:
 
 class TopFrameSize:
     TAB_WIDTH = 550
+    TAB_HEIGHT = 320
     TEXT_BOX_WIDTH = 550
     TEXT_BOX_HEIGHT = 170
     BUTTON_WIDTH = 320

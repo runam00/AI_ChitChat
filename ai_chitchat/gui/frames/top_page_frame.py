@@ -26,12 +26,13 @@ class TopPageFrame(ct.CTkFrame):
             font=TopFrameFont.TITLE,
             text_color=BrandColor.WHITE
         )
-        self.label.grid(row=0, column=0, padx=0, pady=(110, 35))
+        self.label.grid(row=0, column=0, padx=0, pady=(90, 30))
 
         # タブ
         self.tabs = ct.CTkTabview(
             self,
             width=TopFrameSize.TAB_WIDTH,
+            height=TopFrameSize.TAB_HEIGHT,
             fg_color=BrandColor.GRAY,
             segmented_button_fg_color=BrandColor.DARK_GRAY,
             segmented_button_selected_color=BrandColor.BLUE,
@@ -43,12 +44,20 @@ class TopPageFrame(ct.CTkFrame):
         )
         self.tabs._segmented_button.configure(font=TopFrameFont.TAB_BUTTON)
         self.tabs.grid(row=1, column=0, padx=0, pady=0)
-        self.tabs.add(UIString.TAB_GENERATE)  # 作成タブ
-        self.tabs.add(UIString.TAB_GALLERY)  # ギャラリータブ
+        self.tabs.add(UIString.TAB_GENERATE)
+        self.tabs.add(UIString.TAB_GALLERY)
 
-        self.frame_generate = TabGenerateFrame(self.tabs.tab(UIString.TAB_GENERATE), fg_color=BrandColor.GRAY)
+        # 作成タブ
+        self.frame_generate = TabGenerateFrame(
+            self.tabs.tab(UIString.TAB_GENERATE),
+            fg_color=BrandColor.GRAY
+        )
         self.frame_generate.pack()
-        self.frame_gallery = TabGalleryFrame(self.tabs.tab(UIString.TAB_GALLERY), fg_color=BrandColor.GRAY)
+        # ギャラリータブ
+        self.frame_gallery = TabGalleryFrame(
+            self.tabs.tab(UIString.TAB_GALLERY),
+            fg_color=BrandColor.GRAY
+        )
         self.frame_gallery.pack()
 
         # ボタン
@@ -60,7 +69,7 @@ class TopPageFrame(ct.CTkFrame):
             font=TopFrameFont.BUTTON,
             fg_color=BrandColor.BLUE
         )
-        self.button.grid(row=2, column=0, padx=0, pady=(20, 60))
+        self.button.grid(row=2, column=0, padx=0, pady=(0, 30))
 
 
     def change_button_text(self):
@@ -91,15 +100,15 @@ class TabGenerateFrame(ct.CTkFrame):
             text=UIString.GENERATE_DESCRIPTION,
             font=TopFrameFont.DESCRIPTION
         )
-        self.description.grid(row=0, column=0, padx=0, pady=(10, 15))
+        self.description.grid(row=0, column=0, padx=0, pady=(20, 15))
 
         # テキストボックス
         self.text_box = ct.CTkTextbox(
             self,
             width=TopFrameSize.TEXT_BOX_WIDTH,
             height=TopFrameSize.TEXT_BOX_HEIGHT,
-            padx = 12,
-            pady = 8,
+            padx= 12,
+            pady= 8,
             fg_color=BrandColor.DARK_GRAY,
             text_color=BrandColor.WHITE,
             font=TopFrameFont.TEXT_BOX
@@ -119,10 +128,38 @@ class TabGalleryFrame(ct.CTkFrame):
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
 
+        # 2×3でオリジナル画像を表示する
         self.gallery_images = GalleryImagePath.get_values()
-        self.index = 0
-        for row in range(3):
+        self._images: list[ct.CTkButton] = []
+        self._current_index = None
+        self._count = 0
+        for row in range(2):
             for col in range(3):
-                image = ct.CTkImage(Image.open(self.gallery_images[self.index]))
-                # image_frame = ct.CTkFrame(self, image=image)
-                # image_frame.grid(row=row, column=col)
+                image = ct.CTkImage(Image.open(self.gallery_images[self._count]), size=(100, 100))
+                image_button = ct.CTkButton(
+                    self,
+                    width=110,
+                    height=110,
+                    text=None,
+                    fg_color='transparent',
+                    hover_color=BrandColor.BLUE,
+                    image=image,
+                    command=lambda i=self._count: self.button_callback(i)
+                )
+                self._images.append(image_button)
+                image_button.grid(row=row, column=col, padx=5, pady=5)
+                self._count += 1
+
+
+    def change_images_color(self):
+        '''現在選択している画像のみ枠を青くする'''
+        for i in range(len(self._images)):
+            if i == self._current_index:
+                self._images[i].configure(fg_color=BrandColor.BLUE)
+            else:
+                self._images[i].configure(fg_color='transparent')
+
+
+    def button_callback(self, index):
+        self._current_index = index
+        self.change_images_color()

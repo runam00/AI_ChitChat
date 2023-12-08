@@ -12,9 +12,6 @@ class GalleryImagePath(Enum):
     img4 = PATH + 'monster04.png'
     img5 = PATH + 'monster05.png'
     img6 = PATH + 'monster06.png'
-    img7 = PATH + 'monster07.png'
-    img8 = PATH + 'monster08.png'
-    img9 = PATH + 'monster09.png'
 
     @classmethod
     def get_values(cls) -> list:
