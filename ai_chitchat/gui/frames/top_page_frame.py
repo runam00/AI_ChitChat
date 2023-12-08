@@ -47,6 +47,11 @@ class TopPageFrame(ct.CTkFrame):
         self.tabs.add(UIString.TAB_GENERATE)
         self.tabs.add(UIString.TAB_GALLERY)
 
+        # タブボタンの横幅を調整
+        self._tab_segmented_buttons_dict = self.tabs._segmented_button._buttons_dict
+        self._tab_segmented_buttons_dict[UIString.TAB_GENERATE].configure(text=f'　　 {UIString.TAB_GENERATE} 　　')
+        self._tab_segmented_buttons_dict[UIString.TAB_GALLERY].configure(text=f'　{UIString.TAB_GALLERY}　')
+
         # 作成タブ
         self.frame_generate = TabGenerateFrame(
             self.tabs.tab(UIString.TAB_GENERATE),
@@ -80,7 +85,9 @@ class TopPageFrame(ct.CTkFrame):
 
 
     def button_callback(self, button):
-        self._current_name = button.get()
+        current_name: str = button.get()
+        self._current_name = current_name.strip()
+        print(self._current_name)
         self.change_button_text()
 
 
