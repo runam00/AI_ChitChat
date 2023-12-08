@@ -40,7 +40,7 @@ class TopPageFrame(ct.CTkFrame):
             segmented_button_unselected_color=BrandColor.DARK_GRAY,
             segmented_button_unselected_hover_color=BrandColor.BLUE,
             text_color=BrandColor.WHITE,
-            command=lambda: self.button_callback(self.tabs)
+            command=lambda: self.tab_button_callback(self.tabs)
         )
         self.tabs._segmented_button.configure(font=TopFrameFont.TAB_BUTTON)
         self.tabs.grid(row=1, column=0, padx=0, pady=0)
@@ -66,28 +66,32 @@ class TopPageFrame(ct.CTkFrame):
         self.frame_gallery.pack(expand=True)
 
         # ボタン
-        self.button = ct.CTkButton(
+        self.main_button = ct.CTkButton(
             self,
             text=UIString.GENERATE,
-            width=TopFrameSize.BUTTON_WIDTH,
-            height=TopFrameSize.BUTTON_HEIGHT,
-            font=TopFrameFont.BUTTON,
+            width=TopFrameSize.MAIN_BUTTON_WIDTH,
+            height=TopFrameSize.MAIN_BUTTON_HEIGHT,
+            font=TopFrameFont.MAIN_BUTTON,
             fg_color=BrandColor.BLUE
         )
-        self.button.grid(row=2, column=0, padx=0, pady=(10, 30))
+        self.main_button.grid(row=2, column=0, padx=0, pady=(10, 30))
 
 
-    def change_button_text(self):
+    def change_main_button_text(self):
         if self._current_name == UIString.TAB_GENERATE:
-            self.button.configure(text=UIString.GENERATE)
+            self.main_button.configure(text=UIString.GENERATE)
         elif self._current_name == UIString.TAB_GALLERY:
-            self.button.configure(text=UIString.SELECT_FROM_GALLERY)
+            self.main_button.configure(text=UIString.SELECT_FROM_GALLERY)
 
 
-    def button_callback(self, button):
+    def tab_button_callback(self, button):
         current_name: str = button.get()
         self._current_name = current_name.strip()
-        self.change_button_text()
+        self.change_main_button_text()
+
+
+    def main_button_callback(self):
+        pass
 
 
 class TabGenerateFrame(ct.CTkFrame):
