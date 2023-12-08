@@ -1,5 +1,6 @@
 import customtkinter as ct
 import tkinter as tk
+from PIL import Image, ImageTk
 
 from .frames.top_page_frame import TopPageFrame
 from .frames.chat_page_frame import ChatPageFrame
@@ -7,6 +8,7 @@ from .frames.sidebar_frame import SidebarFrame
 from .states.frame_state import FrameState
 from .theme.strings import UIString
 from .theme.colors import BrandColor
+from .theme.sizes import ImageSize
 
 class App(ct.CTk):
     def __init__(self):
@@ -14,6 +16,7 @@ class App(ct.CTk):
         
         self.frame_state = FrameState()  # フレームに関する状態を管理する
         self.frame_state.current_mainframe = UIString.TOP  # 初期値はトップページ
+        self.generated_image = None  # 生成された画像
 
         # UIを表示
         self.build_ui()
@@ -52,6 +55,7 @@ class App(ct.CTk):
             # トップページのメインフレーム
             UIString.TOP: TopPageFrame(
                 parent=self.mainframe_area,
+                root=self,
                 fg_color=BrandColor.GRAY,
                 corner_radius=0
             ), 
@@ -81,3 +85,12 @@ class App(ct.CTk):
         '''引数で指定されたフレームを表示する'''
         frame = self.frame_state.mainframes[frame_name]
         frame.tkraise()
+
+
+    def get_generated_image(self):
+        ### モック ###
+        img = Image.open('assets/images/monster07.png')
+        img = img.resize((ImageSize.WIDTH, ImageSize.HEIGHT))
+        self.generated_image = ImageTk.PhotoImage(img)
+        #######
+        return self.generated_image

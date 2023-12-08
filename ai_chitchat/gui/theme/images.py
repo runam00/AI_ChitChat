@@ -3,6 +3,7 @@ from enum import Enum
 class BrandImagePath:
     TOP_BUTTON = 'assets/icons/house.png'
     CHAT_BUTTON = 'assets/icons/chat-dots.png'
+    CANCEL_BUTTON = 'assets/icons/x-circle.png'
 
 PATH = 'assets/images/'
 class GalleryImagePath(Enum):

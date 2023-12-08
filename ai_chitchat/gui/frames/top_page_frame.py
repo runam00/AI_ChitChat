@@ -1,17 +1,20 @@
 import customtkinter as ct
+import tkinter as tk
 from PIL import Image
 
 from ..theme.strings import UIString
 from ..theme.colors import BrandColor
 from ..theme.sizes import TopFrameSize
 from ..theme.fonts import TopFrameFont
-from ..theme.images import GalleryImagePath
+from ..theme.images import BrandImagePath, GalleryImagePath
 
 class TopPageFrame(ct.CTkFrame):
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, root, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self._current_name: str = ''
+        self.root = root
+        self._current_tab_name: str = UIString.TAB_GENERATE
+        self._is_image_generated: bool = False
 
         # 1×3でグリッドを設定
         self.columnconfigure(0, weight=1)
@@ -52,12 +55,18 @@ class TopPageFrame(ct.CTkFrame):
         self._tab_segmented_buttons_dict[UIString.TAB_GENERATE].configure(text=f'　　 {UIString.TAB_GENERATE} 　　')
         self._tab_segmented_buttons_dict[UIString.TAB_GALLERY].configure(text=f'　{UIString.TAB_GALLERY}　')
 
-        # 作成タブ
+        # 作成タブ 画像未生成状態
         self.frame_generate = TabGenerateFrame(
             self.tabs.tab(UIString.TAB_GENERATE),
             fg_color=BrandColor.GRAY
         )
         self.frame_generate.pack(expand=True)
+        # 作成タブ 生成済み
+        self.frame_generated_image = GeneratedImageFrame(
+            self.tabs.tab(UIString.TAB_GENERATE),
+            fg_color=BrandColor.GRAY,
+            mainframe_root = self
+        )
         # ギャラリータブ
         self.frame_gallery = TabGalleryFrame(
             self.tabs.tab(UIString.TAB_GALLERY),
@@ -65,33 +74,55 @@ class TopPageFrame(ct.CTkFrame):
         )
         self.frame_gallery.pack(expand=True)
 
-        # ボタン
+        # メインボタン
         self.main_button = ct.CTkButton(
             self,
             text=UIString.GENERATE,
             width=TopFrameSize.MAIN_BUTTON_WIDTH,
             height=TopFrameSize.MAIN_BUTTON_HEIGHT,
             font=TopFrameFont.MAIN_BUTTON,
-            fg_color=BrandColor.BLUE
+            fg_color=BrandColor.BLUE,
+            command=self.main_button_callback
         )
         self.main_button.grid(row=2, column=0, padx=0, pady=(10, 30))
 
 
     def change_main_button_text(self):
-        if self._current_name == UIString.TAB_GENERATE:
-            self.main_button.configure(text=UIString.GENERATE)
-        elif self._current_name == UIString.TAB_GALLERY:
-            self.main_button.configure(text=UIString.SELECT_FROM_GALLERY)
+        '''状態によってメインボタンのテキストを変える'''
+        if self._current_tab_name == UIString.TAB_GENERATE:
+            if self._is_image_generated:
+                self.main_button.configure(text=UIString.SELECT_IMAGE)
+            else:
+                self.main_button.configure(text=UIString.GENERATE)
+        elif self._current_tab_name == UIString.TAB_GALLERY:
+            self.main_button.configure(text=UIString.SELECT_IMAGE)
 
 
     def tab_button_callback(self, button):
         current_name: str = button.get()
-        self._current_name = current_name.strip()
+        self._current_tab_name = current_name.strip()
+        self.change_main_button_text()
+
+
+    def cancel_button_callback(self):
+        '''生成された画像の選択をキャンセルし、特徴入力に戻る'''
+        self._is_image_generated = False
+        self.frame_generated_image.pack_forget()
+        self.frame_generate.pack(expand=True)
         self.change_main_button_text()
 
 
     def main_button_callback(self):
-        pass
+        button_text = self.main_button.cget('text')
+        # 「AI画像を生成する」ボタンを押した時の処理
+        if button_text == UIString.GENERATE:
+            self._is_image_generated = True
+            self.frame_generate.pack_forget()
+            self.frame_generated_image.pack(expand=True)
+            # 生成された画像を表示
+            generated_image = self.root.get_generated_image()
+            self.frame_generated_image.show_generated_image(generated_image)
+        self.change_main_button_text()
 
 
 class TabGenerateFrame(ct.CTkFrame):
@@ -173,3 +204,47 @@ class TabGalleryFrame(ct.CTkFrame):
     def button_callback(self, index):
         self._current_index = index
         self.change_images_color()
+
+
+class GeneratedImageFrame(ct.CTkFrame):
+    def __init__(self, parent, mainframe_root, **kwargs):
+        super().__init__(parent, **kwargs)
+
+        self.mainframe_root = mainframe_root
+
+        self.columnconfigure(0, weight=0)
+        self.columnconfigure(1, weight=0)
+        self.columnconfigure(2, weight=0)
+        self.rowconfigure(0, weight=0)
+
+        self._space = ct.CTkFrame(self, fg_color=BrandColor.GRAY, width=32)
+        self._space.grid(row=0, column=0)
+
+        # 画像を表示するエリア
+        self._canvas = tk.Canvas(
+            self,
+            width=TopFrameSize.GENERATED_IMAGE_WIDTH,
+            height=TopFrameSize.GENERATED_IMAGE_HEIGHT,
+            bg=BrandColor.DARK_GRAY
+        )
+        self._canvas.grid(row=0, column=1, padx=10)
+
+        # キャンセルボタン
+        self.icon = ct.CTkImage(Image.open(BrandImagePath.CANCEL_BUTTON))
+        self._cancel_button = ct.CTkButton(
+            self,
+            width=TopFrameSize.CANCEL_BUTTON_WIDTH,
+            height=TopFrameSize.CANCEL_BUTTON_HEIGHT,
+            fg_color='transparent',
+            hover_color=BrandColor.DARK_GRAY,
+            image=self.icon,
+            text=None,
+            command=self.mainframe_root.cancel_button_callback
+        )
+        self._cancel_button.grid(row=0, column=2, sticky='ne')
+
+
+    def show_generated_image(self, generated_image):
+        canvas_width = self._canvas.winfo_width()
+        canvas_height = self._canvas.winfo_height()
+        self._canvas.create_image(canvas_width/2, canvas_height/2, image=generated_image, anchor='center')

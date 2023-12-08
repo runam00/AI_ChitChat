@@ -5,8 +5,7 @@ class UIString():
     TAB_GALLERY = 'ギャラリー'
     GENERATE_DESCRIPTION = 'AIに作成してほしいキャラクターの特徴を入力する'
     GENERATE = 'AI画像を生成する'
-    SELECT_FROM_GALLERY = '選択した画像を使用する'
-    SELECT_FROM_GENERATE = 'このキャラクターと話す'
+    SELECT_IMAGE = 'このキャラクターと話す'
 
     # サイドバー
     TOP = 'TOP'
