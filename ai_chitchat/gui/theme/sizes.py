@@ -17,3 +17,7 @@ class TopFrameSize:
     GENERATED_IMAGE_HEIGHT = 200
     CANCEL_BUTTON_WIDTH = 32
     CANCEL_BUTTON_HEIGHT = 32
+
+class ChatPageSize:
+    BUTTON_WIDTH = 25
+    BUTTON_HEIGHT = 25
