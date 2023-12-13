@@ -4,16 +4,18 @@ from PIL import Image
 from ..theme.colors import BrandColor
 from ..theme.images import BrandImagePath
 from ..theme.sizes import ChatPageSize
+from ..theme.fonts import ChatFrameFont
+from ..theme.strings import UIString
 
 class ChatPageFrame(ct.CTkFrame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
 
-        self.interface_frame = InterfaceFrame(self, fg_color=BrandColor.GRAY)
+        self.interface_frame = InterfaceFrame(self, width=600, height=600)
         self.interface_frame.grid(row=0, column=0)
 
 
@@ -22,11 +24,11 @@ class InterfaceFrame(ct.CTkFrame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
-        self.columnconfigure(2, weight=1)
-        self.columnconfigure(3, weight=1)
-        self.columnconfigure(4, weight=1)
+        self.columnconfigure(0, weight=0)
+        self.columnconfigure(1, weight=0)
+        self.columnconfigure(2, weight=0)
+        self.columnconfigure(3, weight=0)
+        self.columnconfigure(4, weight=0)
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
@@ -83,6 +85,32 @@ class InterfaceFrame(ct.CTkFrame):
             image=download_button_icon,
         )
         self.download_button.grid(row=1, column=4)
+
+        # ユーザーの質問を入力&送信するテキストボックス
+        self.user_input_text_box = ct.CTkEntry(
+            self,
+            width=ChatPageSize.TEXT_BOX_WIDTH,
+            height=ChatPageSize.TEXT_BOX_HEIGHT,
+            fg_color=BrandColor.WHITE,
+            text_color=BrandColor.DARK_GRAY,
+            placeholder_text=UIString.INPUT_HINT,
+            placeholder_text_color=BrandColor.LIGHT_GRAY,
+            font=ChatFrameFont.INPUT_TEXT
+        )
+        self.user_input_text_box.grid(row=2, column=0, columnspan=4, padx=0, pady=10)
+
+        # 送信ボタン
+        submit_button_icon = ct.CTkImage(Image.open(BrandImagePath.SUBMIT_BUTTON), size=(30, 30))
+        submit_button = ct.CTkButton(
+            self,
+            width=50,
+            height=50,
+            fg_color='transparent',
+            hover=False,
+            text=None,
+            image=submit_button_icon)
+        submit_button.grid(row=2, column=4, padx=0)
+
 
 
 class ChatHistoryFrame(ct.CTkFrame):

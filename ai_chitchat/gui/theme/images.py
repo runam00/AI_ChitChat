@@ -9,6 +9,7 @@ class BrandImagePath:
     MUTE_OFF_BUTTON = ICON_PATH + 'volume-up-fill.png'
     REPLAY_BUTTON = ICON_PATH + 'arrow-counterclockwise.png'
     DOWNLOAD_BUTTON = ICON_PATH + 'download.png'
+    SUBMIT_BUTTON = ICON_PATH + 'arrow-up-circle-fill.png'
 
 GALLERY_PATH = 'assets/images/'
 class GalleryImagePath(Enum):
