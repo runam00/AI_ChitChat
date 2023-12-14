@@ -1,10 +1,10 @@
 import customtkinter as ct
 import tkinter as tk
-from PIL import Image
+from PIL import Image, ImageTk
 
 from ..theme.strings import UIString
 from ..theme.colors import BrandColor
-from ..theme.sizes import TopFrameSize
+from ..theme.sizes import TopFrameSize, ImageSize
 from ..theme.fonts import TopFrameFont
 from ..theme.images import BrandImagePath, GalleryImagePath
 
@@ -64,7 +64,7 @@ class TopPageFrame(ct.CTkFrame):
         # 作成タブ 生成済み
         self.frame_generated_image = GeneratedImageFrame(
             self.tabs.tab(UIString.TAB_GENERATE),
-            fg_color=BrandColor.GRAY,
+            fg_color='transparent',
             mainframe_root = self
         )
         # ギャラリータブ
@@ -121,6 +121,8 @@ class TopPageFrame(ct.CTkFrame):
             self.frame_generated_image.pack(expand=True)
             # 生成された画像を表示
             generated_image = self.root.get_generated_image()
+            generated_image = generated_image.resize((ImageSize.WIDTH, ImageSize.HEIGHT))
+            generated_image = ImageTk.PhotoImage(generated_image)
             self.frame_generated_image.show_generated_image(generated_image)
         self.change_main_button_text()
 

@@ -10,6 +10,7 @@ class BrandImagePath:
     REPLAY_BUTTON = ICON_PATH + 'arrow-counterclockwise.png'
     DOWNLOAD_BUTTON = ICON_PATH + 'download.png'
     SUBMIT_BUTTON = ICON_PATH + 'arrow-up-circle-fill.png'
+    USER_ICON = ICON_PATH + 'person-fill.png'
 
 GALLERY_PATH = 'assets/images/'
 class GalleryImagePath(Enum):

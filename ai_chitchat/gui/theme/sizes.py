@@ -23,3 +23,4 @@ class ChatPageSize:
     BUTTON_HEIGHT = 25
     TEXT_BOX_WIDTH = 500
     TEXT_BOX_HEIGHT = 40
+    IMAGE_ICON_SIZE = (25, 25)
