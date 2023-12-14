@@ -15,7 +15,7 @@ class ChatPageFrame(ct.CTkFrame):
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
 
-        self.interface_frame = InterfaceFrame(self, width=600, height=600)
+        self.interface_frame = InterfaceFrame(self, width=600, height=600, fg_color='transparent')
         self.interface_frame.grid(row=0, column=0)
 
 
@@ -26,7 +26,7 @@ class InterfaceFrame(ct.CTkFrame):
 
         self.columnconfigure(0, weight=0)
         self.columnconfigure(1, weight=0)
-        self.columnconfigure(2, weight=0)
+        self.columnconfigure(2, weight=1)
         self.columnconfigure(3, weight=0)
         self.columnconfigure(4, weight=0)
         self.rowconfigure(0, weight=1)
@@ -41,12 +41,12 @@ class InterfaceFrame(ct.CTkFrame):
             hover_color=BrandColor.GRAY,
             text=None
         )
-        self.mute_toggle_button.grid(row=1, column=0)
+        self.mute_toggle_button.grid(row=1, column=0, padx=(10, 5))
 
         # 音量調整ボタン
         self.audio_volume_slider = ct.CTkSlider(
             self,
-            width=80,
+            width=100,
             fg_color=BrandColor.DARK_GRAY,
             progress_color=BrandColor.WHITE,
             button_color=BrandColor.WHITE,
@@ -97,7 +97,7 @@ class InterfaceFrame(ct.CTkFrame):
             placeholder_text_color=BrandColor.LIGHT_GRAY,
             font=ChatFrameFont.INPUT_TEXT
         )
-        self.user_input_text_box.grid(row=2, column=0, columnspan=4, padx=0, pady=10)
+        self.user_input_text_box.grid(row=2, column=0, columnspan=4, padx=(10, 0), pady=10)
 
         # 送信ボタン
         submit_button_icon = ct.CTkImage(Image.open(BrandImagePath.SUBMIT_BUTTON), size=(30, 30))
