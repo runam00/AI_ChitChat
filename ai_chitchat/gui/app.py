@@ -27,6 +27,7 @@ class App(ct.CTk):
     def build_ui(self):
         self.title('AI_ChitChat')
         self.geometry('1280x720')
+        ct.set_appearance_mode("dark")
 
         # 2×1でグリッドを設定
         self.grid_columnconfigure(1, weight=1)
