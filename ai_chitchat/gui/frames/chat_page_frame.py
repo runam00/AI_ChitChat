@@ -1,4 +1,5 @@
 import customtkinter as ct
+import tkinter as tk
 from PIL import Image
 
 from ..theme.colors import BrandColor
@@ -17,10 +18,10 @@ class ChatPageFrame(ct.CTkFrame):
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
 
-        self.interface_frame = InterfaceFrame(self, width=600, height=600, fg_color='transparent')
-        self.chat_history_frame = ChatHistoryFrame(self, self.root, width=600)
-        self.interface_frame.grid(row=0, column=0)
-        self.chat_history_frame.grid(row=0, column=1)
+        self.interface_frame = InterfaceFrame(self, height=800, fg_color='transparent')
+        self.chat_history_frame = ChatHistoryFrame(self, self.root, width=800, fg_color='transparent')
+        self.interface_frame.grid(row=0, column=0, padx=(80, 40), pady=20, sticky='ew')
+        self.chat_history_frame.grid(row=0, column=1, padx=(40, 80), pady=50, sticky='nse')
 
 
 class InterfaceFrame(ct.CTkFrame):
@@ -101,7 +102,7 @@ class InterfaceFrame(ct.CTkFrame):
             placeholder_text_color=BrandColor.LIGHT_GRAY,
             font=ChatFrameFont.INPUT_TEXT
         )
-        self.user_input_text_box.grid(row=2, column=0, columnspan=4, padx=(10, 0), pady=10)
+        self.user_input_text_box.grid(row=2, column=0, columnspan=4, pady=10)
 
         # 送信ボタン
         submit_button_icon = ct.CTkImage(Image.open(BrandImagePath.SUBMIT_BUTTON), size=(30, 30))
@@ -128,9 +129,9 @@ class ChatHistoryFrame(ct.CTkScrollableFrame):
         self._message_count = 0
 
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
+        self.rowconfigure(0, weight=1)
 
-        # ユーザーアイコン
+        # ユーザーアイコンを用意
         self._user_icon = ct.CTkImage(
             Image.open(BrandImagePath.USER_ICON),
             size=ChatPageSize.IMAGE_ICON_SIZE
@@ -138,6 +139,7 @@ class ChatHistoryFrame(ct.CTkScrollableFrame):
 
         self.fetch_generated_image()
         self.fetch_messages_list()
+        self.place_all_messages()
 
 
     def fetch_generated_image(self):
@@ -153,39 +155,22 @@ class ChatHistoryFrame(ct.CTkScrollableFrame):
 
     def place_message(self, message: dict, row: int):
         '''一つのメッセージを配置する'''
-        # アイコン
-        icon = ct.CTkButton(
-            self,
-            width=25,
-            height=25,
-            fg_color='transparent',
-            border_color=BrandColor.BLUE,
-            hover=False
-        )
-
-        # チャットメッセージ
-        message_text = ct.CTkLabel(
-            self,
-            corner_radius=0,
-            text=message['content'],
-            text_color=BrandColor.WHITE
-        )
 
         if message['role'] == 'AI':
-            icon.configure(image=self._ai_icon)
-            message_text.configure(fg_color=BrandColor.LIGHT_GRAY)
+            icon_image = self._ai_icon
+            bg = BrandColor.GRAY
         elif message['role'] == 'user':
-            icon.configure(image=self._user_icon)
-            message_text.configure(fg_color=BrandColor.DARK_GRAY)
+            icon_image = self._user_icon
+            bg = BrandColor.DARK_GRAY
 
-        icon.grid(row=row, column=0, padx=10, pady=(5, 0))
-        message_text.grid(row=row, column=1, padx=10, pady=5)
+        message_frame = ChatMessageFrame(self, icon_image, message['content'], fg_color=bg, corner_radius=0)
+        message_frame.grid(row=row, column=0, padx=5, pady=(5, 0), sticky='nsew')
 
 
     def place_all_messages(self):
         '''全てのメッセージを配置する'''
         for i, message in enumerate(self._messages_list):
-            self.place_message(message, i)
+            self.place_message(message=message, row=i)
 
 
     def add_message(self):
@@ -193,3 +178,47 @@ class ChatHistoryFrame(ct.CTkScrollableFrame):
         image = ct.CTkImage(self._ai_icon, size=(ChatPageSize.IMAGE_ICON_SIZE))
         icon = ct.CTkButton(self, image=image)
         # icon.grid(row=)
+
+
+class ChatMessageFrame(ct.CTkFrame):
+    def __init__(self, parent, icon, message, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.icon_image = icon
+        self.message = message
+
+        self.columnconfigure(0, weight=0)
+        self.columnconfigure(1, weight=1)
+        self.rowconfigure(0, weight=1)
+
+        # アイコン
+        self._icon = ct.CTkButton(
+            self,
+            width=30,
+            height=30,
+            fg_color='transparent',
+            command='top',
+            anchor='center',
+            hover=False,
+            image=self.icon_image,
+            text=None,
+            state='disabled'
+        )
+
+        # チャットメッセージ
+        self._message_text = tk.Text(
+            self,
+            height=2,
+            borderwidth=0,
+            padx=10,
+            pady=10,
+            bg=self._fg_color,
+            fg=BrandColor.WHITE,
+            font=ChatFrameFont.MESSAGE_TEXT,
+            wrap=tk.WORD,
+        )
+        self._message_text.insert(tk.END, message)
+        # インスタンス化時に設定するとテキストを挿入できないため、後からテキストを編集不可に設定
+        self._message_text.configure(state=tk.DISABLED)
+
+        self._icon.grid(row=0, column=0, padx=5, pady=5, sticky='nw')
+        self._message_text.grid(row=0, column=1, padx=0, pady=0, sticky='ns')

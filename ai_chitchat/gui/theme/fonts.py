@@ -12,3 +12,4 @@ class TopFrameFont:
 
 class ChatFrameFont:
     INPUT_TEXT = (DEFAULT_FONT, 17)
+    MESSAGE_TEXT = (DEFAULT_FONT, 12)

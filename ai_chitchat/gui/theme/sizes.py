@@ -21,6 +21,6 @@ class TopFrameSize:
 class ChatPageSize:
     BUTTON_WIDTH = 25
     BUTTON_HEIGHT = 25
-    TEXT_BOX_WIDTH = 500
+    TEXT_BOX_WIDTH = 800
     TEXT_BOX_HEIGHT = 40
-    IMAGE_ICON_SIZE = (25, 25)
+    IMAGE_ICON_SIZE = (30, 30)

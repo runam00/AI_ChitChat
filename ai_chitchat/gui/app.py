@@ -18,11 +18,6 @@ class App(ct.CTk):
         self._generated_image = None  # 生成された画像
         self._messages_list: list[dict[str: str]] = []  # role,content
 
-        # UIを表示
-        self.build_ui()
-        # 起動時にトップページを表示
-        self.show_frame(UIString.TOP)
-
         ###モック###
         self._messages_list = [
             {'role': 'user', 'content': '1回目のメッセージ'},
@@ -31,6 +26,11 @@ class App(ct.CTk):
             {'role': 'AI', 'content': 'こんにちは、良い天気ですね'},
         ]
         ###
+
+        # UIを表示
+        self.build_ui()
+        # 起動時にトップページを表示
+        self.show_frame(UIString.TOP)
 
 
     def build_ui(self):
