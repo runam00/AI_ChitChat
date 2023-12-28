@@ -121,8 +121,7 @@ class TopPageFrame(ct.CTkFrame):
             self.frame_generated_image.pack(expand=True)
             # 生成された画像を表示
             generated_image = self.root.get_generated_image()
-            generated_image = generated_image.resize((ImageSize.WIDTH, ImageSize.HEIGHT))
-            generated_image = ImageTk.PhotoImage(generated_image)
+            # generated_image = generated_image.resize((ImageSize.WIDTH, ImageSize.HEIGHT))
             self.frame_generated_image.show_generated_image(generated_image)
         self.change_main_button_text()
 
@@ -223,13 +222,15 @@ class GeneratedImageFrame(ct.CTkFrame):
         self._space.grid(row=0, column=0)
 
         # 画像を表示するエリア
-        self._canvas = tk.Canvas(
+        self._image_space = ct.CTkLabel(
             self,
             width=TopFrameSize.GENERATED_IMAGE_WIDTH,
             height=TopFrameSize.GENERATED_IMAGE_HEIGHT,
-            bg=BrandColor.DARK_GRAY
+            text=None,
+            bg_color=BrandColor.DARK_GRAY
         )
-        self._canvas.grid(row=0, column=1, padx=10)
+        self._image_space.grid(row=0, column=1, padx=10)
+
 
         # キャンセルボタン
         self.icon = ct.CTkImage(Image.open(BrandImagePath.CANCEL_BUTTON))
@@ -247,6 +248,6 @@ class GeneratedImageFrame(ct.CTkFrame):
 
 
     def show_generated_image(self, generated_image):
-        canvas_width = self._canvas.winfo_width()
-        canvas_height = self._canvas.winfo_height()
-        self._canvas.create_image(canvas_width/2, canvas_height/2, image=generated_image, anchor='center')
+        if generated_image is not None:
+            image = ct.CTkImage(generated_image, size=(ImageSize.WIDTH, ImageSize.HEIGHT))
+            self._image_space.configure(image=image)
