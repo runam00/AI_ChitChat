@@ -35,7 +35,8 @@ class App(ct.CTk):
 
     def build_ui(self):
         self.title('AI_ChitChat')
-        self.geometry('1280x720')
+        self.geometry('1440x810')
+        self.minsize(1440, 810)
         ct.set_appearance_mode("dark")
 
         # 2×1でグリッドを設定
