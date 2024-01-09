@@ -205,44 +205,21 @@ class ChatMessageFrame(ct.CTkFrame):
         )
 
         # チャットメッセージ
-        # self._message_text = tk.Text(
-        #     self,
-        #     borderwidth=0,
-        #     padx=10,
-        #     pady=10,
-        #     bg=self._fg_color,
-        #     fg=BrandColor.WHITE,
-        #     font=ChatFrameFont.MESSAGE_TEXT,
-        #     wrap=tk.WORD,
-        # )
-
         self._message_text = tk.Message(
             self,
+            width=550,
+            pady=10,
+            bg=self._fg_color,
+            fg=BrandColor.WHITE,
             font=ChatFrameFont.MESSAGE_TEXT,
         )
 
         self.set_text()
-        # self.set_text_height()
 
         self._icon.grid(row=0, column=0, padx=5, pady=5, sticky='nw')
-        self._message_text.grid(row=0, column=1, padx=0, pady=0, sticky='ns')
+        self._message_text.grid(row=0, column=1, padx=0, pady=0, sticky='nsw')
 
 
     def set_text(self):
         '''テキストを挿入する'''
-        # self._message_text.insert(tk.END, self.message)
-        # # インスタンス化時に設定するとテキストを挿入できないため、後からテキストを編集不可に設定
-        # self._message_text.configure(state=tk.DISABLED)
-
         self._message_text.configure(text=self.message)
-
-
-    def set_text_height(self):
-        '''テキストボックスの高さを設定する'''
-        # height = int(self._message_text.index('end-1c').split('.')[0])
-        text = self._message_text.get('1.0', tk.END)
-        height = len(text.splitlines())
-        ###デバッグ
-        print(height)
-
-        # self._message_text.configure(height=height)
