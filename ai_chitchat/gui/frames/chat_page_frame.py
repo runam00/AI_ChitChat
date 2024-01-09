@@ -38,17 +38,20 @@ class InterfaceFrame(ct.CTkFrame):
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
 
-        # ミュートトグルボタン
-        self.mute_toggle_button = ct.CTkButton(
+        # 音量調節アイコン
+        sound_icon_image = ct.CTkImage(Image.open(BrandImagePath.SOUND_ICON), size=(25, 25))
+        self.sound_icon = ct.CTkButton(
             self,
             width=ChatPageSize.BUTTON_WIDTH,
             height=ChatPageSize.BUTTON_HEIGHT,
+            fg_color='transparent',
             hover_color=BrandColor.GRAY,
-            text=None
+            text=None,
+            image=sound_icon_image
         )
-        self.mute_toggle_button.grid(row=1, column=0, padx=(10, 5))
+        self.sound_icon.grid(row=1, column=0)
 
-        # 音量調整ボタン
+        # 音量調整スライダー
         self.audio_volume_slider = ct.CTkSlider(
             self,
             width=100,
