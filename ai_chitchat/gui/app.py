@@ -31,6 +31,8 @@ class App(ct.CTk):
         self.build_ui()
         # 起動時にトップページを表示
         self.show_frame(UIString.TOP)
+        # 指定したウィジェット以外の場所をクリックした際、フォーカスを外すためのイベントを設定
+        self.bind('<Button-1>', self.remove_focus)
 
 
     def build_ui(self):
@@ -110,3 +112,11 @@ class App(ct.CTk):
     def get_messages_list(self):
         '''全てのメッセージリストを取得する'''
         return self._messages_list
+
+
+    def remove_focus(self, event):
+        '''クリックした場所が指定されたウィジェットではない場合、フォーカスを外す'''
+        # フォーカスを外したいウィジェットの型
+        widget_types = [tk.Text, tk.Entry]
+        if type(event.widget) not in widget_types:
+            event.widget.master.focus_set()
