@@ -1,4 +1,8 @@
 class UIString():
+    # システム
+    ROLE_USER = 'user'
+    ROLE_AI = 'AI'
+
     # トップページ
     TITLE = 'AI ChitChat'
     TAB_GENERATE = '作成'

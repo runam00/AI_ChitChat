@@ -7,6 +7,9 @@ from ..theme.images import BrandImagePath
 from ..theme.sizes import ChatPageSize
 from ..theme.fonts import ChatFrameFont
 from ..theme.strings import UIString
+from lib.add_chat_message import add_chat_message
+from infrastructure.chatbot import chatbot_send_message
+
 
 class ChatPageFrame(ct.CTkFrame):
     def __init__(self, parent, root, **kwargs):
@@ -18,16 +21,34 @@ class ChatPageFrame(ct.CTkFrame):
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
 
-        self.interface_frame = InterfaceFrame(self, height=800, fg_color='transparent')
-        self.chat_history_frame = ChatHistoryFrame(self, self.root, width=800, fg_color='transparent')
+        self.interface_frame = InterfaceFrame(self, root, height=800, fg_color='transparent')
+        self.chat_history_frame = ChatHistoryFrame(self, self.root, width=900, fg_color='transparent')
         self.interface_frame.grid(row=0, column=0, padx=(80, 40), pady=20, sticky='ew')
         self.chat_history_frame.grid(row=0, column=1, padx=(40, 80), pady=50, sticky='nse')
+
+        self.interface_frame.submit_button.configure(command=self.on_submit_button_clicked)
+
+
+    def on_submit_button_clicked(self):
+        '''送信ボタンを押したときのコールバック関数'''
+        # ユーザーが入力したテキストを取得して配置
+        user_text = self.interface_frame.get_user_text()
+        add_chat_message(self.root, self.chat_history_frame, UIString.ROLE_USER, user_text)
+
+        # 返答テキストを取得して配置
+        response = chatbot_send_message(user_text)
+        add_chat_message(self.root, self.chat_history_frame, UIString.ROLE_AI, response)
+
+        # テキストボックスを空にする
+        self.interface_frame.user_input_text_box.delete(0, tk.END)
 
 
 class InterfaceFrame(ct.CTkFrame):
     '''テキスト送信、音量調整、ダウンロードなどのユーザーインターフェースを配置するフレーム'''
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, root, **kwargs):
         super().__init__(parent, **kwargs)
+
+        self.root = root
 
         self.columnconfigure(0, weight=0)
         self.columnconfigure(1, weight=0)
@@ -109,16 +130,21 @@ class InterfaceFrame(ct.CTkFrame):
 
         # 送信ボタン
         submit_button_icon = ct.CTkImage(Image.open(BrandImagePath.SUBMIT_BUTTON), size=(30, 30))
-        submit_button = ct.CTkButton(
+        self.submit_button = ct.CTkButton(
             self,
             width=50,
             height=50,
             fg_color='transparent',
             hover=False,
             text=None,
-            image=submit_button_icon)
-        submit_button.grid(row=2, column=4, padx=0)
+            image=submit_button_icon,
+        )
+        self.submit_button.grid(row=2, column=4, padx=0)
 
+
+    def get_user_text(self):
+        '''UIからユーザーが入力したテキストを取得'''
+        return self.user_input_text_box.get()
 
 
 class ChatHistoryFrame(ct.CTkScrollableFrame):
@@ -176,13 +202,6 @@ class ChatHistoryFrame(ct.CTkScrollableFrame):
             self.place_message(message=message, row=i)
 
 
-    def add_message(self):
-        self.fetch_generated_image()
-        image = ct.CTkImage(self._ai_icon, size=(ChatPageSize.IMAGE_ICON_SIZE))
-        icon = ct.CTkButton(self, image=image)
-        # icon.grid(row=)
-
-
 class ChatMessageFrame(ct.CTkFrame):
     def __init__(self, parent, icon, message, **kwargs):
         super().__init__(parent, **kwargs)
@@ -210,7 +229,7 @@ class ChatMessageFrame(ct.CTkFrame):
         # チャットメッセージ
         self._message_text = tk.Message(
             self,
-            width=550,
+            width=500,
             pady=10,
             bg=self._fg_color,
             fg=BrandColor.WHITE,
@@ -220,7 +239,7 @@ class ChatMessageFrame(ct.CTkFrame):
         self.set_text()
 
         self._icon.grid(row=0, column=0, padx=5, pady=5, sticky='nw')
-        self._message_text.grid(row=0, column=1, padx=0, pady=0, sticky='nsw')
+        self._message_text.grid(row=0, column=1, padx=0, pady=0, sticky='w')
 
 
     def set_text(self):
