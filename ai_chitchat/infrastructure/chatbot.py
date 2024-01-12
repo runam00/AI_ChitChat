@@ -18,7 +18,7 @@ class ChatbotClient:
 
     def generate_response(self, message):
         '''APIからのレスポンスを返す'''
-        prompt = self.generate_prompt(message)
+        prompt = self._generate_prompt(message)
 
         if self.bot_type == 'chatgpt':
             response = openai.ChatCompletion.create(
@@ -29,10 +29,16 @@ class ChatbotClient:
             return response['choices'][0]['message']['content']
         return
 
-    def generate_prompt(self, message):
+    def _generate_prompt(self, message):
         '''APIに渡すプロンプトを生成する'''
         system_message = '''あなたはフレンドリーな口調でユーザーの質問に答えてください。'''
         return [
             {'role': 'system', 'content': system_message},
             {'role': 'user', 'content': message}
         ]
+
+
+def chatbot_send_message(user_text: str):
+    '''チャットボットにメッセージを送信して返答テキストを取得する'''
+    chatbot_client = ChatbotClient('chatgpt')
+    return chatbot_client.generate_response(user_text)

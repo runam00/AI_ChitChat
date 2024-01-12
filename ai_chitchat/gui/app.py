@@ -114,9 +114,14 @@ class App(ct.CTk):
         return self._messages_list
 
 
+    def add_message(self, role, content):
+        '''メッセージリストにメッセージを追加する'''
+        self._messages_list.append({'role': role, 'content': content})
+
+
     def remove_focus(self, event):
         '''クリックした場所が指定されたウィジェットではない場合、フォーカスを外す'''
         # フォーカスを外したいウィジェットの型
-        widget_types = [tk.Text, tk.Entry]
+        widget_types = [tk.Text, tk.Entry, tk.Label]
         if type(event.widget) not in widget_types:
             event.widget.master.focus_set()
