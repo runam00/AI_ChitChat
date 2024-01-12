@@ -32,7 +32,6 @@ class ChatPageFrame(ct.CTkFrame):
 
         self.interface_frame.submit_button.configure(command=self.on_submit_button_clicked)
 
-
     def on_submit_button_clicked(self):
         '''送信ボタンを押したときのコールバック関数'''
         # ボタンを使用不可にする
@@ -42,14 +41,11 @@ class ChatPageFrame(ct.CTkFrame):
         # ボタンを使用可能に戻す
         self.interface_frame.submit_button.configure(state='normal')
 
-
     def get_root(self):
         return self.root
 
-
     def get_interface_frame(self):
         return self.interface_frame
-
 
     def get_chat_history_frame(self):
         return self.chat_history_frame
@@ -153,7 +149,6 @@ class InterfaceFrame(ct.CTkFrame):
         )
         self.submit_button.grid(row=2, column=4)
 
-
     def get_user_text(self):
         '''UIからユーザーが入力したテキストを取得'''
         return self.user_input_text_box.get()
@@ -182,17 +177,14 @@ class ChatHistoryFrame(ct.CTkScrollableFrame):
         self.fetch_messages_list()
         self.place_all_messages()
 
-
     def fetch_generated_image(self):
         '''生成された画像を取得し、CTkImageクラスに格納する'''
         generated_image = self.root.get_generated_image()
         self._ai_icon = ct.CTkImage(generated_image, size=(ChatPageSize.IMAGE_ICON_SIZE))
 
-
     def fetch_messages_list(self):
         '''メッセージリストを取得する'''
         self._messages_list = self.root.get_messages_list()
-
 
     def place_message(self, message: dict, row: int):
         '''一つのメッセージを配置する'''
@@ -206,7 +198,6 @@ class ChatHistoryFrame(ct.CTkScrollableFrame):
 
         message_frame = ChatMessageFrame(self, icon_image, message['content'], fg_color=bg, corner_radius=0)
         message_frame.grid(row=row, column=0, padx=5, pady=(5, 0), sticky='nsew')
-
 
     def place_all_messages(self):
         '''全てのメッセージを配置する'''
@@ -252,7 +243,6 @@ class ChatMessageFrame(ct.CTkFrame):
 
         self._icon.grid(row=0, column=0, padx=5, pady=5, sticky='nw')
         self._message_text.grid(row=0, column=1, padx=0, pady=0, sticky='w')
-
 
     def set_text(self):
         '''テキストを挿入する'''

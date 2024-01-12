@@ -34,7 +34,6 @@ class App(ct.CTk):
         # 指定したウィジェット以外の場所をクリックした際、フォーカスを外すためのイベントを設定
         self.bind('<Button-1>', self.remove_focus)
 
-
     def build_ui(self):
         self.title('AI_ChitChat')
         self.geometry('1440x810')
@@ -84,22 +83,18 @@ class App(ct.CTk):
         for frame in self._frame_state.mainframes.values():
             frame.grid(row=0, column=0, sticky='nsew')
 
-
     def get_current_mainframe_name(self):
         '''現在表示されているメインフレームの名前を返す'''
         return self._frame_state.current_mainframe
-
 
     def update_current_mainframe_name(self, new_current_mainframe: str):
         '''現在表示しているフレームの情報を更新する'''
         self._frame_state.current_mainframe = new_current_mainframe
 
-
     def show_frame(self, frame_name: str):
         '''引数で指定されたフレームを表示する'''
         frame = self._frame_state.mainframes[frame_name]
         frame.tkraise()
-
 
     def get_generated_image(self):
         '''生成された画像オブジェクトを取得する'''
@@ -108,16 +103,13 @@ class App(ct.CTk):
         #######
         return self._generated_image
 
-
     def get_messages_list(self):
         '''全てのメッセージリストを取得する'''
         return self._messages_list
 
-
     def add_message(self, role, content):
         '''メッセージリストにメッセージを追加する'''
         self._messages_list.append({'role': role, 'content': content})
-
 
     def remove_focus(self, event):
         '''クリックした場所が指定されたウィジェットではない場合、フォーカスを外す'''

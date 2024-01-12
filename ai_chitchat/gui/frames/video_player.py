@@ -34,11 +34,9 @@ class VideoPlayer(ct.CTkFrame):
         )
         self.start_button.pack()
 
-
     def load(self, path):
         '''ビデオを読み込む'''
         self.video = cv2.VideoCapture(path)
-
 
     def start(self):
         if self.video is None:
@@ -52,7 +50,6 @@ class VideoPlayer(ct.CTkFrame):
             thread.start()
         else:
             thread = None
-
 
     def draw(self):
         while self.playing:
@@ -68,7 +65,6 @@ class VideoPlayer(ct.CTkFrame):
 
         lock.release()
 
-
     def _set_frame(self, frame):
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         pil_image = Image.fromarray(rgb_frame)
@@ -76,7 +72,6 @@ class VideoPlayer(ct.CTkFrame):
         image = ct.CTkImage(image=resized_image)
 
         self.start_button.configure(image=image)
-
 
     def _scale_to_width(self, image):
         '''アスペクト比を保ったまま横幅に合わせる'''
