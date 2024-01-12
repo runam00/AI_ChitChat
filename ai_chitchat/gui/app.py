@@ -122,6 +122,6 @@ class App(ct.CTk):
     def remove_focus(self, event):
         '''クリックした場所が指定されたウィジェットではない場合、フォーカスを外す'''
         # フォーカスを外したいウィジェットの型
-        widget_types = [tk.Text, tk.Entry, tk.Label]
+        widget_types = [tk.Text, tk.Entry, tk.Label, ct.CTkCanvas]
         if type(event.widget) not in widget_types:
             event.widget.master.focus_set()

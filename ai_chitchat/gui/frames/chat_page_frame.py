@@ -7,8 +7,8 @@ from ..theme.images import BrandImagePath
 from ..theme.sizes import ChatPageSize
 from ..theme.fonts import ChatFrameFont
 from ..theme.strings import UIString
+from .video_player import VideoPlayer
 from lib.add_chat_message import add_chat_message
-from infrastructure.chatbot import chatbot_send_message
 
 
 class ChatPageFrame(ct.CTkFrame):
@@ -20,27 +20,39 @@ class ChatPageFrame(ct.CTkFrame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
 
-        self.interface_frame = InterfaceFrame(self, root, height=800, fg_color='transparent')
+        self.video_player = VideoPlayer(self, width=500, height=500)
+        self.interface_frame = InterfaceFrame(self, root, fg_color='transparent')
         self.chat_history_frame = ChatHistoryFrame(self, self.root, width=900, fg_color='transparent')
-        self.interface_frame.grid(row=0, column=0, padx=(80, 40), pady=20, sticky='ew')
-        self.chat_history_frame.grid(row=0, column=1, padx=(40, 80), pady=50, sticky='nse')
+
+        self.video_player.grid(row=0, column=0, padx=(80, 0), pady=(50, 10), sticky='s')
+        self.interface_frame.grid(row=1, column=0, padx=(80, 0), pady=(10, 50), sticky='new')
+        self.chat_history_frame.grid(row=0, column=1, rowspan=2, padx=(40, 80), pady=50, sticky='nse')
 
         self.interface_frame.submit_button.configure(command=self.on_submit_button_clicked)
 
 
     def on_submit_button_clicked(self):
         '''送信ボタンを押したときのコールバック関数'''
-        # ユーザーが入力したテキストを取得して配置
-        user_text = self.interface_frame.get_user_text()
-        add_chat_message(self.root, self.chat_history_frame, UIString.ROLE_USER, user_text)
+        # ボタンを使用不可にする
+        self.interface_frame.submit_button.configure(state='disabled')
+        # チャットメッセージを配置
+        add_chat_message(self)
+        # ボタンを使用可能に戻す
+        self.interface_frame.submit_button.configure(state='normal')
 
-        # 返答テキストを取得して配置
-        response = chatbot_send_message(user_text)
-        add_chat_message(self.root, self.chat_history_frame, UIString.ROLE_AI, response)
 
-        # テキストボックスを空にする
-        self.interface_frame.user_input_text_box.delete(0, tk.END)
+    def get_root(self):
+        return self.root
+
+
+    def get_interface_frame(self):
+        return self.interface_frame
+
+
+    def get_chat_history_frame(self):
+        return self.chat_history_frame
 
 
 class InterfaceFrame(ct.CTkFrame):
@@ -88,32 +100,32 @@ class InterfaceFrame(ct.CTkFrame):
         space.grid(row=1, column=2)
 
         # 動画のリプレイボタン
-        replay_button_icon = ct.CTkImage(Image.open(BrandImagePath.REPLAY_BUTTON), size=(25, 25))
-        self.replay_button = ct.CTkButton(
-            self,
-            width=ChatPageSize.BUTTON_WIDTH,
-            height=ChatPageSize.BUTTON_HEIGHT,
-            fg_color='transparent',
-            hover_color=BrandColor.GRAY,
-            anchor='center',
-            text=None,
-            image=replay_button_icon
-        )
-        self.replay_button.grid(row=1, column=3)
+        # replay_button_icon = ct.CTkImage(Image.open(BrandImagePath.REPLAY_BUTTON), size=(25, 25))
+        # self.replay_button = ct.CTkButton(
+        #     self,
+        #     width=ChatPageSize.BUTTON_WIDTH,
+        #     height=ChatPageSize.BUTTON_HEIGHT,
+        #     fg_color='transparent',
+        #     hover_color=BrandColor.GRAY,
+        #     anchor='center',
+        #     text=None,
+        #     image=replay_button_icon
+        # )
+        # self.replay_button.grid(row=1, column=3)
 
         # ダウンロードボタン
-        download_button_icon = ct.CTkImage(Image.open(BrandImagePath.DOWNLOAD_BUTTON), size=(25, 25))
-        self.download_button = ct.CTkButton(
-            self,
-            width=ChatPageSize.BUTTON_WIDTH,
-            height=ChatPageSize.BUTTON_HEIGHT,
-            fg_color='transparent',
-            hover_color=BrandColor.GRAY,
-            anchor='center',
-            text=None,
-            image=download_button_icon,
-        )
-        self.download_button.grid(row=1, column=4)
+        # download_button_icon = ct.CTkImage(Image.open(BrandImagePath.DOWNLOAD_BUTTON), size=(25, 25))
+        # self.download_button = ct.CTkButton(
+        #     self,
+        #     width=ChatPageSize.BUTTON_WIDTH,
+        #     height=ChatPageSize.BUTTON_HEIGHT,
+        #     fg_color='transparent',
+        #     hover_color=BrandColor.GRAY,
+        #     anchor='center',
+        #     text=None,
+        #     image=download_button_icon,
+        # )
+        # self.download_button.grid(row=1, column=4)
 
         # ユーザーの質問を入力&送信するテキストボックス
         self.user_input_text_box = ct.CTkEntry(
@@ -139,7 +151,7 @@ class InterfaceFrame(ct.CTkFrame):
             text=None,
             image=submit_button_icon,
         )
-        self.submit_button.grid(row=2, column=4, padx=0)
+        self.submit_button.grid(row=2, column=4)
 
 
     def get_user_text(self):
