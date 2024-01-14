@@ -61,7 +61,7 @@ class VideoPlayer(ct.CTkFrame):
             if not ret:
                 self.playing = False
             else:
-                self._set_frame()
+                self._set_frame(frame)
 
         lock.release()
 

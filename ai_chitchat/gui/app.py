@@ -1,3 +1,7 @@
+import os
+import tempfile
+import shutil
+
 import customtkinter as ct
 import tkinter as tk
 from PIL import Image
@@ -12,7 +16,8 @@ from .theme.colors import BrandColor
 class App(ct.CTk):
     def __init__(self):
         super().__init__()
-        
+
+        self.temp_dir = None  # 一時フォルダのパス
         self._frame_state = FrameState()  # フレームに関する状態を管理する
         self._frame_state.current_mainframe = UIString.TOP  # 初期値はトップページ
         self._generated_image = None  # 生成された画像
@@ -33,6 +38,10 @@ class App(ct.CTk):
         self.show_frame(UIString.TOP)
         # 指定したウィジェット以外の場所をクリックした際、フォーカスを外すためのイベントを設定
         self.bind('<Button-1>', self.remove_focus)
+        # 一時フォルダを作成
+        self.make_temp_dir()
+        # プログラム終了時に一時ファイルを削除
+        self.protocol("WM_DELETE_WINDOW", self.close_window)
 
     def build_ui(self):
         self.title('AI_ChitChat')
@@ -117,3 +126,28 @@ class App(ct.CTk):
         widget_types = [tk.Text, tk.Entry, tk.Label, ct.CTkCanvas]
         if type(event.widget) not in widget_types:
             event.widget.master.focus_set()
+
+    def make_temp_dir(self):
+        '''一時フォルダを作成'''
+        self.temp_dir = tempfile.mkdtemp()
+        ### デバッグ ###
+        print(f'一時ファイルパス：{self.temp_dir}')
+        ###
+
+    def delete_temp_file(self):
+        '''一時フォルダを削除'''
+        if self.temp_dir is not None:
+            shutil.rmtree(self.temp_dir)
+            ### デバッグ ###
+            print('一時フォルダ削除')
+            folder_exists = os.path.exists(self.temp_dir)
+            print(f"一時フォルダが存在するかどうか: {folder_exists}")
+            ###
+
+    def close_window(self):
+        '''「×」ボタンが押された際にウィンドウを閉じる'''
+        # 一時ファイルを削除する
+        self.delete_temp_file()
+        # プログラムを終了
+        self.destroy()
+        self.quit()
