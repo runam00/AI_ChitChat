@@ -17,13 +17,17 @@ class App(ct.CTk):
     def __init__(self):
         super().__init__()
 
-        self.temp_dir = None  # 一時フォルダのパス
+        self._temp_dir = None  # 一時フォルダのパス
+        self._generated_image = None  # 生成された画像のパス
+        self._generated_audio_data = None  # 生成された音声ファイルのパス
+        self._generated_video = None  # 生成されたトーキングフォト動画のパス
+        self._messages_list: list[dict[str: str]] = []  # チャットの履歴 {'role': '','content': ''}
+
         self._frame_state = FrameState()  # フレームに関する状態を管理する
         self._frame_state.current_mainframe = UIString.TOP  # 初期値はトップページ
-        self._generated_image = None  # 生成された画像
-        self._messages_list: list[dict[str: str]] = []  # role,content
 
         ###モック###
+        self._generated_video = 'assets/sample/sample.mp4'
         self._messages_list = [
             {'role': 'user', 'content': '1回目のメッセージ'},
             {'role': 'AI', 'content': 'プログラミング言語や使用しているフレームワークやライブラリによって異なりますが、一般的には「fetchLatestMessage」や「getLatestMessage」などのような関数名が使われることがあります。ただし、具体的なコンテキストや使用している技術によって最適な関数名が変わる可能性があります。'},
@@ -44,6 +48,7 @@ class App(ct.CTk):
         self.protocol("WM_DELETE_WINDOW", self.close_window)
 
     def build_ui(self):
+
         self.title('AI_ChitChat')
         self.geometry('1440x810')
         self.minsize(1440, 810)
@@ -101,7 +106,7 @@ class App(ct.CTk):
         self._frame_state.current_mainframe = new_current_mainframe
 
     def show_frame(self, frame_name: str):
-        '''引数で指定されたフレームを表示する'''
+        '''引数で指定されたフレームを一番上に表示する'''
         frame = self._frame_state.mainframes[frame_name]
         frame.tkraise()
 
@@ -120,6 +125,10 @@ class App(ct.CTk):
         '''メッセージリストにメッセージを追加する'''
         self._messages_list.append({'role': role, 'content': content})
 
+    def get_generated_video(self):
+        '''生成された動画のパスを返す'''
+        return self._generated_video
+
     def remove_focus(self, event):
         '''クリックした場所が指定されたウィジェットではない場合、フォーカスを外す'''
         # フォーカスを外したいウィジェットの型
@@ -129,18 +138,18 @@ class App(ct.CTk):
 
     def make_temp_dir(self):
         '''一時フォルダを作成'''
-        self.temp_dir = tempfile.mkdtemp()
+        self._temp_dir = tempfile.mkdtemp()
         ### デバッグ ###
-        print(f'一時ファイルパス：{self.temp_dir}')
+        print(f'一時ファイルパス：{self._temp_dir}')
         ###
 
     def delete_temp_file(self):
         '''一時フォルダを削除'''
-        if self.temp_dir is not None:
-            shutil.rmtree(self.temp_dir)
+        if self._temp_dir is not None:
+            shutil.rmtree(self._temp_dir)
             ### デバッグ ###
             print('一時フォルダ削除')
-            folder_exists = os.path.exists(self.temp_dir)
+            folder_exists = os.path.exists(self._temp_dir)
             print(f"一時フォルダが存在するかどうか: {folder_exists}")
             ###
 

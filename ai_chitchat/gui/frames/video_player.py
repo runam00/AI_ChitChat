@@ -11,7 +11,7 @@ from ..theme.colors import BrandColor
 lock = th.Lock()
 
 class VideoPlayer(ct.CTkFrame):
-    def __init__(self, parent, width, height, **kwargs):
+    def __init__(self, parent, width, height, image, **kwargs):
         super().__init__(parent, width=width, height=height, **kwargs)
 
         self.width = width
@@ -20,7 +20,9 @@ class VideoPlayer(ct.CTkFrame):
         self.video = None
         self.playing = False
 
-        # self.pack(expand=True, fill=tk.BOTH)
+        self.pack(expand=True, fill=tk.BOTH)
+
+        image = ct.CTkImage(image, size=(self.width, self.height))
 
         # 動画をクリックすると再生が可能になる
         self.start_button = ct.CTkButton(
@@ -30,6 +32,8 @@ class VideoPlayer(ct.CTkFrame):
             fg_color=BrandColor.DARK_GRAY,
             hover=False,
             text=None,
+            anchor='center',
+            image=image,
             command=self.start
         )
         self.start_button.pack()
@@ -53,8 +57,6 @@ class VideoPlayer(ct.CTkFrame):
 
     def draw(self):
         while self.playing:
-            global lock
-            lock.acquire()
 
             ret, frame = self.video.read()
 
@@ -63,13 +65,13 @@ class VideoPlayer(ct.CTkFrame):
             else:
                 self._set_frame(frame)
 
-        lock.release()
-
     def _set_frame(self, frame):
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         pil_image = Image.fromarray(rgb_frame)
-        resized_image = self._scale_to_width(pil_image)
-        image = ct.CTkImage(image=resized_image)
+        # resized_image = self._scale_to_width(pil_image)
+        image = ct.CTkImage(pil_image, size=(self.width, self.height))
+        ###デバッグ
+        print(type(image))
 
         self.start_button.configure(image=image)
 

@@ -9,6 +9,7 @@ from ..theme.fonts import ChatFrameFont
 from ..theme.strings import UIString
 from .video_player import VideoPlayer
 from lib.add_chat_message import add_chat_message
+from lib.play_video import play_video
 
 
 class ChatPageFrame(ct.CTkFrame):
@@ -22,7 +23,9 @@ class ChatPageFrame(ct.CTkFrame):
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
 
-        self.video_player = VideoPlayer(self, width=500, height=500)
+        image = self.root.get_generated_image()
+
+        self.video_player = VideoPlayer(self, width=500, height=500, image=image)
         self.interface_frame = InterfaceFrame(self, root, fg_color='transparent')
         self.chat_history_frame = ChatHistoryFrame(self, self.root, width=900, fg_color='transparent')
 
@@ -38,6 +41,8 @@ class ChatPageFrame(ct.CTkFrame):
         self.interface_frame.submit_button.configure(state='disabled')
         # チャットメッセージを配置
         add_chat_message(self)
+        # 動画を再生する
+        play_video(self)
         # ボタンを使用可能に戻す
         self.interface_frame.submit_button.configure(state='normal')
 
@@ -49,6 +54,9 @@ class ChatPageFrame(ct.CTkFrame):
 
     def get_chat_history_frame(self):
         return self.chat_history_frame
+
+    def get_video_player(self):
+        return self.video_player
 
 
 class InterfaceFrame(ct.CTkFrame):
