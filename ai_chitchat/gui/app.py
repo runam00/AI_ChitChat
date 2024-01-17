@@ -37,7 +37,7 @@ class App(ct.CTk):
             {'role': 'AI', 'content': 'こんにちは、良い天気ですね'},
         ]
         self._generated_audio = 'assets/sample/test.wav'
-        self._generated_image = 'assets/images/monster08.png'
+        self._generated_image = 'assets/sample/sample.png'
         # self.make_audio()
         ###
 

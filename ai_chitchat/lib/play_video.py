@@ -5,10 +5,6 @@ def play_video(frame):
     video = root.get_generated_video()  # 動画のパス
     audio = root.get_generated_audio()  # 音声ファイルのパス
 
-    ### デバッグ ###
-    print(video)
-    ###
-
     # 動画を読み込む
     video_player.load(video, audio)
 
