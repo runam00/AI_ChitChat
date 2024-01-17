@@ -1,10 +1,12 @@
 import os
 import tempfile
 import shutil
+import ffmpeg
 
 import customtkinter as ct
 import tkinter as tk
 from PIL import Image
+from moviepy.editor import AudioFileClip
 
 from .frames.top_page_frame import TopPageFrame
 from .frames.chat_page_frame import ChatPageFrame
@@ -19,7 +21,7 @@ class App(ct.CTk):
 
         self._temp_dir = None  # 一時フォルダのパス
         self._generated_image = None  # 生成された画像のパス
-        self._generated_audio_data = None  # 生成された音声ファイルのパス
+        self._generated_audio = None  # 生成された音声ファイルのパス
         self._generated_video = None  # 生成されたトーキングフォト動画のパス
         self._messages_list: list[dict[str: str]] = []  # チャットの履歴 {'role': '','content': ''}
 
@@ -34,6 +36,9 @@ class App(ct.CTk):
             {'role': 'user', 'content': '3回目のメッセージ'},
             {'role': 'AI', 'content': 'こんにちは、良い天気ですね'},
         ]
+        self._generated_audio = 'assets/sample/test.wav'
+        self._generated_image = 'assets/images/monster08.png'
+        # self.make_audio()
         ###
 
         # UIを表示
@@ -117,6 +122,9 @@ class App(ct.CTk):
         #######
         return self._generated_image
 
+    def get_image_path(self):
+        return self._generated_image
+
     def get_messages_list(self):
         '''全てのメッセージリストを取得する'''
         return self._messages_list
@@ -128,6 +136,10 @@ class App(ct.CTk):
     def get_generated_video(self):
         '''生成された動画のパスを返す'''
         return self._generated_video
+
+    def get_generated_audio(self):
+        '''生成された音声ファイルのパスを返す'''
+        return self._generated_audio
 
     def remove_focus(self, event):
         '''クリックした場所が指定されたウィジェットではない場合、フォーカスを外す'''
@@ -160,3 +172,10 @@ class App(ct.CTk):
         # プログラムを終了
         self.destroy()
         self.quit()
+
+
+    ###デバッグ用###
+    def make_audio(self):
+        audio = AudioFileClip(self._generated_video)
+        audio.write_audiofile('assets/sample/test.wav')
+        audio.close()
