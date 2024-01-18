@@ -25,19 +25,22 @@ class App(ct.CTk):
         self._generated_video = None  # 生成されたトーキングフォト動画のパス
         self._messages_list: list[dict[str: str]] = []  # チャットの履歴 {'role': '','content': ''}
 
+        self._ai_chitchat_dir = os.getcwd()  # AI_ChitChatのパス
+        self._sadtalker_dir = r'..\AI_ChitChat_tool\sadtalker\SadTalker'  #【要指定】sadtalkerをクローンしたディレクトリパス
+
         self._frame_state = FrameState()  # フレームに関する状態を管理する
         self._frame_state.current_mainframe = UIString.TOP  # 初期値はトップページ
 
         ###モック###
-        self._generated_video = 'assets/sample/sample.mp4'
+        self._generated_video = r'assets\sample\sample.mp4'
         self._messages_list = [
             {'role': 'user', 'content': '1回目のメッセージ'},
             {'role': 'AI', 'content': 'プログラミング言語や使用しているフレームワークやライブラリによって異なりますが、一般的には「fetchLatestMessage」や「getLatestMessage」などのような関数名が使われることがあります。ただし、具体的なコンテキストや使用している技術によって最適な関数名が変わる可能性があります。'},
             {'role': 'user', 'content': '3回目のメッセージ'},
             {'role': 'AI', 'content': 'こんにちは、良い天気ですね'},
         ]
-        self._generated_audio = 'assets/sample/test.wav'
-        self._generated_image = 'assets/sample/sample.png'
+        self._generated_audio = r'assets\sample\test.wav'
+        self._generated_image = r'assets\sample\sample.png'
         # self.make_audio()
         ###
 
@@ -140,6 +143,12 @@ class App(ct.CTk):
     def get_generated_audio(self):
         '''生成された音声ファイルのパスを返す'''
         return self._generated_audio
+
+    def get_sadtalker_dir(self):
+        return self._sadtalker_dir
+
+    def get_ai_chitchat_dir(self):
+        return self._ai_chitchat_dir
 
     def remove_focus(self, event):
         '''クリックした場所が指定されたウィジェットではない場合、フォーカスを外す'''
