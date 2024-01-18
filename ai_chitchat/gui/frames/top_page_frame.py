@@ -86,7 +86,6 @@ class TopPageFrame(ct.CTkFrame):
         )
         self.main_button.grid(row=2, column=0, padx=0, pady=(10, 30))
 
-
     def change_main_button_text(self):
         '''状態によってメインボタンのテキストを変える'''
         if self._current_tab_name == UIString.TAB_GENERATE:
@@ -97,12 +96,10 @@ class TopPageFrame(ct.CTkFrame):
         elif self._current_tab_name == UIString.TAB_GALLERY:
             self.main_button.configure(text=UIString.SELECT_IMAGE)
 
-
     def tab_button_callback(self, button):
         current_name: str = button.get()
         self._current_tab_name = current_name.strip()
         self.change_main_button_text()
-
 
     def cancel_button_callback(self):
         '''生成された画像の選択をキャンセルし、特徴入力に戻る'''
@@ -110,7 +107,6 @@ class TopPageFrame(ct.CTkFrame):
         self.frame_generated_image.pack_forget()
         self.frame_generate.pack(expand=True)
         self.change_main_button_text()
-
 
     def main_button_callback(self):
         button_text = self.main_button.cget('text')
@@ -192,7 +188,6 @@ class TabGalleryFrame(ct.CTkFrame):
                 image_button.grid(row=row, column=col, padx=7, pady=8)
                 self._count += 1
 
-
     def change_images_color(self):
         '''現在選択している画像のみ枠を青くする'''
         for i in range(len(self._images)):
@@ -200,7 +195,6 @@ class TabGalleryFrame(ct.CTkFrame):
                 self._images[i].configure(fg_color=BrandColor.BLUE)
             else:
                 self._images[i].configure(fg_color='transparent')
-
 
     def button_callback(self, index):
         self._current_index = index
@@ -231,7 +225,6 @@ class GeneratedImageFrame(ct.CTkFrame):
         )
         self._image_space.grid(row=0, column=1, padx=10)
 
-
         # キャンセルボタン
         self.icon = ct.CTkImage(Image.open(BrandImagePath.CANCEL_BUTTON))
         self._cancel_button = ct.CTkButton(
@@ -245,7 +238,6 @@ class GeneratedImageFrame(ct.CTkFrame):
             command=self.mainframe_root.cancel_button_callback
         )
         self._cancel_button.grid(row=0, column=2, sticky='ne')
-
 
     def show_generated_image(self, generated_image):
         if generated_image is not None:

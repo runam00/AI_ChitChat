@@ -7,8 +7,10 @@ from ..theme.images import BrandImagePath
 from ..theme.sizes import ChatPageSize
 from ..theme.fonts import ChatFrameFont
 from ..theme.strings import UIString
+from .video_player import VideoPlayer
 from lib.add_chat_message import add_chat_message
-from infrastructure.chatbot import chatbot_send_message
+from lib.play_video import play_video
+from lib.generate_video import generate_video
 
 
 class ChatPageFrame(ct.CTkFrame):
@@ -20,27 +22,44 @@ class ChatPageFrame(ct.CTkFrame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
 
-        self.interface_frame = InterfaceFrame(self, root, height=800, fg_color='transparent')
+        image = self.root.get_generated_image()
+
+        self.video_player = VideoPlayer(self, width=500, height=500, image=image)
+        self.interface_frame = InterfaceFrame(self, root, fg_color='transparent')
         self.chat_history_frame = ChatHistoryFrame(self, self.root, width=900, fg_color='transparent')
-        self.interface_frame.grid(row=0, column=0, padx=(80, 40), pady=20, sticky='ew')
-        self.chat_history_frame.grid(row=0, column=1, padx=(40, 80), pady=50, sticky='nse')
+
+        self.video_player.grid(row=0, column=0, padx=(80, 0), pady=(50, 10), sticky='s')
+        self.interface_frame.grid(row=1, column=0, padx=(80, 0), pady=(10, 50), sticky='new')
+        self.chat_history_frame.grid(row=0, column=1, rowspan=2, padx=(40, 80), pady=50, sticky='nse')
 
         self.interface_frame.submit_button.configure(command=self.on_submit_button_clicked)
 
-
     def on_submit_button_clicked(self):
         '''送信ボタンを押したときのコールバック関数'''
-        # ユーザーが入力したテキストを取得して配置
-        user_text = self.interface_frame.get_user_text()
-        add_chat_message(self.root, self.chat_history_frame, UIString.ROLE_USER, user_text)
+        # ボタンを使用不可にする
+        self.interface_frame.submit_button.configure(state='disabled')
+        # チャットメッセージを配置
+        add_chat_message(self)
+        # 動画を生成する
+        # generate_video(self)
+        # 動画を再生する
+        play_video(self)
+        # ボタンを使用可能に戻す
+        self.interface_frame.submit_button.configure(state='normal')
 
-        # 返答テキストを取得して配置
-        response = chatbot_send_message(user_text)
-        add_chat_message(self.root, self.chat_history_frame, UIString.ROLE_AI, response)
+    def get_root(self):
+        return self.root
 
-        # テキストボックスを空にする
-        self.interface_frame.user_input_text_box.delete(0, tk.END)
+    def get_interface_frame(self):
+        return self.interface_frame
+
+    def get_chat_history_frame(self):
+        return self.chat_history_frame
+
+    def get_video_player(self):
+        return self.video_player
 
 
 class InterfaceFrame(ct.CTkFrame):
@@ -59,61 +78,61 @@ class InterfaceFrame(ct.CTkFrame):
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
 
-        # 音量調節アイコン
-        sound_icon_image = ct.CTkImage(Image.open(BrandImagePath.SOUND_ICON), size=(25, 25))
-        self.sound_icon = ct.CTkButton(
-            self,
-            width=ChatPageSize.BUTTON_WIDTH,
-            height=ChatPageSize.BUTTON_HEIGHT,
-            fg_color='transparent',
-            hover_color=BrandColor.GRAY,
-            text=None,
-            image=sound_icon_image
-        )
-        self.sound_icon.grid(row=1, column=0)
+        # # 音量調節アイコン
+        # sound_icon_image = ct.CTkImage(Image.open(BrandImagePath.SOUND_ICON), size=(25, 25))
+        # self.sound_icon = ct.CTkButton(
+        #     self,
+        #     width=ChatPageSize.BUTTON_WIDTH,
+        #     height=ChatPageSize.BUTTON_HEIGHT,
+        #     fg_color='transparent',
+        #     hover_color=BrandColor.GRAY,
+        #     text=None,
+        #     image=sound_icon_image
+        # )
+        # self.sound_icon.grid(row=1, column=0)
 
-        # 音量調整スライダー
-        self.audio_volume_slider = ct.CTkSlider(
-            self,
-            width=100,
-            fg_color=BrandColor.DARK_GRAY,
-            progress_color=BrandColor.WHITE,
-            button_color=BrandColor.WHITE,
-            hover=False
-        )
-        self.audio_volume_slider.grid(row=1, column=1)
+        # # 音量調整スライダー
+        # self.audio_volume_slider = ct.CTkSlider(
+        #     self,
+        #     width=100,
+        #     fg_color=BrandColor.DARK_GRAY,
+        #     progress_color=BrandColor.WHITE,
+        #     button_color=BrandColor.WHITE,
+        #     hover=False
+        # )
+        # self.audio_volume_slider.grid(row=1, column=1)
 
         # 位置調整用のスペース
         space = ct.CTkFrame(self, width=250, height=20, fg_color=BrandColor.GRAY)
         space.grid(row=1, column=2)
 
         # 動画のリプレイボタン
-        replay_button_icon = ct.CTkImage(Image.open(BrandImagePath.REPLAY_BUTTON), size=(25, 25))
-        self.replay_button = ct.CTkButton(
-            self,
-            width=ChatPageSize.BUTTON_WIDTH,
-            height=ChatPageSize.BUTTON_HEIGHT,
-            fg_color='transparent',
-            hover_color=BrandColor.GRAY,
-            anchor='center',
-            text=None,
-            image=replay_button_icon
-        )
-        self.replay_button.grid(row=1, column=3)
+        # replay_button_icon = ct.CTkImage(Image.open(BrandImagePath.REPLAY_BUTTON), size=(25, 25))
+        # self.replay_button = ct.CTkButton(
+        #     self,
+        #     width=ChatPageSize.BUTTON_WIDTH,
+        #     height=ChatPageSize.BUTTON_HEIGHT,
+        #     fg_color='transparent',
+        #     hover_color=BrandColor.GRAY,
+        #     anchor='center',
+        #     text=None,
+        #     image=replay_button_icon
+        # )
+        # self.replay_button.grid(row=1, column=3)
 
         # ダウンロードボタン
-        download_button_icon = ct.CTkImage(Image.open(BrandImagePath.DOWNLOAD_BUTTON), size=(25, 25))
-        self.download_button = ct.CTkButton(
-            self,
-            width=ChatPageSize.BUTTON_WIDTH,
-            height=ChatPageSize.BUTTON_HEIGHT,
-            fg_color='transparent',
-            hover_color=BrandColor.GRAY,
-            anchor='center',
-            text=None,
-            image=download_button_icon,
-        )
-        self.download_button.grid(row=1, column=4)
+        # download_button_icon = ct.CTkImage(Image.open(BrandImagePath.DOWNLOAD_BUTTON), size=(25, 25))
+        # self.download_button = ct.CTkButton(
+        #     self,
+        #     width=ChatPageSize.BUTTON_WIDTH,
+        #     height=ChatPageSize.BUTTON_HEIGHT,
+        #     fg_color='transparent',
+        #     hover_color=BrandColor.GRAY,
+        #     anchor='center',
+        #     text=None,
+        #     image=download_button_icon,
+        # )
+        # self.download_button.grid(row=1, column=4)
 
         # ユーザーの質問を入力&送信するテキストボックス
         self.user_input_text_box = ct.CTkEntry(
@@ -139,8 +158,7 @@ class InterfaceFrame(ct.CTkFrame):
             text=None,
             image=submit_button_icon,
         )
-        self.submit_button.grid(row=2, column=4, padx=0)
-
+        self.submit_button.grid(row=2, column=4)
 
     def get_user_text(self):
         '''UIからユーザーが入力したテキストを取得'''
@@ -170,17 +188,14 @@ class ChatHistoryFrame(ct.CTkScrollableFrame):
         self.fetch_messages_list()
         self.place_all_messages()
 
-
     def fetch_generated_image(self):
         '''生成された画像を取得し、CTkImageクラスに格納する'''
         generated_image = self.root.get_generated_image()
         self._ai_icon = ct.CTkImage(generated_image, size=(ChatPageSize.IMAGE_ICON_SIZE))
 
-
     def fetch_messages_list(self):
         '''メッセージリストを取得する'''
         self._messages_list = self.root.get_messages_list()
-
 
     def place_message(self, message: dict, row: int):
         '''一つのメッセージを配置する'''
@@ -194,7 +209,6 @@ class ChatHistoryFrame(ct.CTkScrollableFrame):
 
         message_frame = ChatMessageFrame(self, icon_image, message['content'], fg_color=bg, corner_radius=0)
         message_frame.grid(row=row, column=0, padx=5, pady=(5, 0), sticky='nsew')
-
 
     def place_all_messages(self):
         '''全てのメッセージを配置する'''
@@ -240,7 +254,6 @@ class ChatMessageFrame(ct.CTkFrame):
 
         self._icon.grid(row=0, column=0, padx=5, pady=5, sticky='nw')
         self._message_text.grid(row=0, column=1, padx=0, pady=0, sticky='w')
-
 
     def set_text(self):
         '''テキストを挿入する'''
