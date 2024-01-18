@@ -11,4 +11,7 @@ def generate_video(frame):
 
 def run_command(command: list):
     '''シェルコマンドを実行する'''
-    return subprocess.run(command, capture_output=True, text=True)
+    try:
+        return subprocess.run(command, capture_output=True, text=True, shell=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error: {e}")

@@ -72,7 +72,7 @@ class VideoPlayer(ct.CTkFrame):
         print(f'フレーム数：{frame_count}')
 
         # フレーム間の待機時間を設定（fpsに基づく）
-        delay = int(600 / fps)
+        delay = int(300 / fps)
         print(delay)
 
         # 再生

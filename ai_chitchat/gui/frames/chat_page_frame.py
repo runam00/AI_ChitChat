@@ -43,7 +43,7 @@ class ChatPageFrame(ct.CTkFrame):
         # チャットメッセージを配置
         add_chat_message(self)
         # 動画を生成する
-        generate_video(self)
+        # generate_video(self)
         # 動画を再生する
         play_video(self)
         # ボタンを使用可能に戻す
@@ -78,29 +78,29 @@ class InterfaceFrame(ct.CTkFrame):
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
 
-        # 音量調節アイコン
-        sound_icon_image = ct.CTkImage(Image.open(BrandImagePath.SOUND_ICON), size=(25, 25))
-        self.sound_icon = ct.CTkButton(
-            self,
-            width=ChatPageSize.BUTTON_WIDTH,
-            height=ChatPageSize.BUTTON_HEIGHT,
-            fg_color='transparent',
-            hover_color=BrandColor.GRAY,
-            text=None,
-            image=sound_icon_image
-        )
-        self.sound_icon.grid(row=1, column=0)
+        # # 音量調節アイコン
+        # sound_icon_image = ct.CTkImage(Image.open(BrandImagePath.SOUND_ICON), size=(25, 25))
+        # self.sound_icon = ct.CTkButton(
+        #     self,
+        #     width=ChatPageSize.BUTTON_WIDTH,
+        #     height=ChatPageSize.BUTTON_HEIGHT,
+        #     fg_color='transparent',
+        #     hover_color=BrandColor.GRAY,
+        #     text=None,
+        #     image=sound_icon_image
+        # )
+        # self.sound_icon.grid(row=1, column=0)
 
-        # 音量調整スライダー
-        self.audio_volume_slider = ct.CTkSlider(
-            self,
-            width=100,
-            fg_color=BrandColor.DARK_GRAY,
-            progress_color=BrandColor.WHITE,
-            button_color=BrandColor.WHITE,
-            hover=False
-        )
-        self.audio_volume_slider.grid(row=1, column=1)
+        # # 音量調整スライダー
+        # self.audio_volume_slider = ct.CTkSlider(
+        #     self,
+        #     width=100,
+        #     fg_color=BrandColor.DARK_GRAY,
+        #     progress_color=BrandColor.WHITE,
+        #     button_color=BrandColor.WHITE,
+        #     hover=False
+        # )
+        # self.audio_volume_slider.grid(row=1, column=1)
 
         # 位置調整用のスペース
         space = ct.CTkFrame(self, width=250, height=20, fg_color=BrandColor.GRAY)

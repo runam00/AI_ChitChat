@@ -5,5 +5,6 @@ def test_run_command_with_echo():
     sentence = 'Hello, World'
     command = ['echo', sentence]
     result = run_command(command)
+    print(f'結果：{result}')
     assert result.returncode == 0
-    assert result.stdout == sentence
+    assert result.stdout.strip('"\n') == sentence

@@ -118,9 +118,9 @@ class App(ct.CTk):
     def get_generated_image(self):
         '''生成された画像オブジェクトを取得する'''
         ### モック ###
-        self._generated_image = Image.open('assets/images/monster08.png')
+        self._generated_image_data = Image.open(self._generated_image)
         #######
-        return self._generated_image
+        return self._generated_image_data
 
     def get_image_path(self):
         return self._generated_image
