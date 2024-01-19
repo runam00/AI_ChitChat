@@ -1,13 +1,13 @@
 import os
 import tempfile
 import shutil
-import ffmpeg
 
 import customtkinter as ct
 import tkinter as tk
 from PIL import Image
 from moviepy.editor import AudioFileClip
 
+from lib.file_utils import read_txt_file
 from .frames.top_page_frame import TopPageFrame
 from .frames.chat_page_frame import ChatPageFrame
 from .frames.sidebar_frame import SidebarFrame
@@ -26,7 +26,7 @@ class App(ct.CTk):
         self._messages_list: list[dict[str: str]] = []  # チャットの履歴 {'role': '','content': ''}
 
         self._ai_chitchat_dir = os.getcwd()  # AI_ChitChatのパス
-        self._sadtalker_dir = r'..\AI_ChitChat_tool\sadtalker\SadTalker'  #【要指定】sadtalkerをクローンしたディレクトリパス
+        self._webui_dir = None  #weubiが置いてあるディレクトリパス
 
         self._frame_state = FrameState()  # フレームに関する状態を管理する
         self._frame_state.current_mainframe = UIString.TOP  # 初期値はトップページ
@@ -44,6 +44,9 @@ class App(ct.CTk):
         # self.make_audio()
         ###
 
+        # アプリに必要なツールのパスを設定
+        self.set_tool_path()
+
         # UIを表示
         self.build_ui()
         # 起動時にトップページを表示
@@ -54,6 +57,9 @@ class App(ct.CTk):
         self.make_temp_dir()
         # プログラム終了時に一時ファイルを削除
         self.protocol("WM_DELETE_WINDOW", self.close_window)
+
+        ### デバッグ　###
+        print(f'webui：{self._webui_dir}')
 
     def build_ui(self):
 
@@ -144,8 +150,8 @@ class App(ct.CTk):
         '''生成された音声ファイルのパスを返す'''
         return self._generated_audio
 
-    def get_sadtalker_dir(self):
-        return self._sadtalker_dir
+    def get_webui_dir(self):
+        return self._webui_dir
 
     def get_ai_chitchat_dir(self):
         return self._ai_chitchat_dir
@@ -173,6 +179,11 @@ class App(ct.CTk):
             folder_exists = os.path.exists(self._temp_dir)
             print(f"一時フォルダが存在するかどうか: {folder_exists}")
             ###
+
+    def set_tool_path(self):
+        '''dir_path.txtからディレクトリのパスを読み込んで設定する'''
+        webui_path = read_txt_file('dir_path.txt', 'webui')
+        self._webui_dir = webui_path
 
     def close_window(self):
         '''「×」ボタンが押された際にウィンドウを閉じる'''
