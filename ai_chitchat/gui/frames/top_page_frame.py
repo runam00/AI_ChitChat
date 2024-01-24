@@ -69,7 +69,8 @@ class TopPageFrame(ct.CTkFrame):
         )
         # ギャラリータブ
         self.frame_gallery = TabGalleryFrame(
-            self.tabs.tab(UIString.TAB_GALLERY),
+            parent=self.tabs.tab(UIString.TAB_GALLERY),
+            root=self.root,
             fg_color=BrandColor.GRAY
         )
         self.frame_gallery.pack(expand=True)
@@ -82,7 +83,7 @@ class TopPageFrame(ct.CTkFrame):
             height=TopFrameSize.MAIN_BUTTON_HEIGHT,
             font=TopFrameFont.MAIN_BUTTON,
             fg_color=BrandColor.BLUE,
-            command=self.main_button_callback
+            command=self.on_main_button_clicked
         )
         self.main_button.grid(row=2, column=0, padx=0, pady=(10, 30))
 
@@ -108,7 +109,7 @@ class TopPageFrame(ct.CTkFrame):
         self.frame_generate.pack(expand=True)
         self.change_main_button_text()
 
-    def main_button_callback(self):
+    def on_main_button_clicked(self):
         button_text = self.main_button.cget('text')
         # 「AI画像を生成する」ボタンを押した時の処理
         if button_text == UIString.GENERATE:
@@ -119,6 +120,15 @@ class TopPageFrame(ct.CTkFrame):
             generated_image = self.root.get_generated_image()
             # generated_image = generated_image.resize((ImageSize.WIDTH, ImageSize.HEIGHT))
             self.frame_generated_image.show_generated_image(generated_image)
+        # 「このキャラクターと話す」ボタンを押した時の処理
+        elif button_text == UIString.SELECT_IMAGE:
+            # 選択中の画像のパスを設定
+            selected_image = self.frame_gallery.get_selected_image()
+            self.root.set_image(selected_image)
+            # 設定した画像を表示
+            self.root.recreate_chatpage_frame()
+            # チャットページに遷移
+            self.root.show_frame(UIString.CHAT)
         self.change_main_button_text()
 
 
@@ -155,8 +165,10 @@ class TabGenerateFrame(ct.CTkFrame):
 
 
 class TabGalleryFrame(ct.CTkFrame):
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, root, **kwargs):
         super().__init__(parent, **kwargs)
+
+        self.root = root
 
         # 3×3でグリッドを設定
         self.columnconfigure(0, weight=1)
@@ -182,11 +194,14 @@ class TabGalleryFrame(ct.CTkFrame):
                     fg_color='transparent',
                     hover_color=BrandColor.BLUE,
                     image=image,
-                    command=lambda i=self._count: self.button_callback(i)
+                    command=lambda i=self._count: self.on_button_clicked(i)
                 )
                 self._images.append(image_button)
                 image_button.grid(row=row, column=col, padx=7, pady=8)
                 self._count += 1
+
+    def get_selected_image(self):
+        return self.gallery_images[self._current_index]
 
     def change_images_color(self):
         '''現在選択している画像のみ枠を青くする'''
@@ -196,7 +211,7 @@ class TabGalleryFrame(ct.CTkFrame):
             else:
                 self._images[i].configure(fg_color='transparent')
 
-    def button_callback(self, index):
+    def on_button_clicked(self, index):
         self._current_index = index
         self.change_images_color()
 

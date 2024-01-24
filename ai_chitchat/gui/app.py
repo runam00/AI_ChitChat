@@ -116,13 +116,24 @@ class App(ct.CTk):
         return self._frame_state.current_mainframe
 
     def update_current_mainframe_name(self, new_current_mainframe: str):
-        '''現在表示しているフレームの情報を更新する'''
+        '''現在表示しているフレームの名前を設定する'''
         self._frame_state.current_mainframe = new_current_mainframe
 
     def show_frame(self, frame_name: str):
         '''引数で指定されたフレームを一番上に表示する'''
         frame = self._frame_state.mainframes[frame_name]
         frame.tkraise()
+
+    def recreate_chatpage_frame(self):
+        '''チャットページのフレームを作成し直して上書き、設置する'''
+        self._frame_state.mainframes[UIString.CHAT] = ChatPageFrame(
+                parent=self.mainframe_area,
+                root=self,
+                fg_color=BrandColor.GRAY,
+                corner_radius=0
+            )
+        self._frame_state.mainframes[UIString.CHAT].grid(row=0, column=0, sticky='nsew')
+
 
     def get_generated_image(self):
         '''生成された画像オブジェクトを取得する'''
@@ -133,21 +144,20 @@ class App(ct.CTk):
 
     def get_image_path(self):
         return self._generated_image
+    
+    def set_image(self, image):
+        self._generated_image = image
 
     def get_messages_list(self):
-        '''全てのメッセージリストを取得する'''
         return self._messages_list
 
     def add_message(self, role, content):
-        '''メッセージリストにメッセージを追加する'''
         self._messages_list.append({'role': role, 'content': content})
 
     def get_generated_video(self):
-        '''生成された動画のパスを返す'''
         return self._generated_video
 
     def get_generated_audio(self):
-        '''生成された音声ファイルのパスを返す'''
         return self._generated_audio
 
     def get_webui_dir(self):

@@ -31,7 +31,10 @@ class ChatbotClient:
 
     def _generate_prompt(self, message):
         '''APIに渡すプロンプトを生成する'''
-        system_message = '''あなたはフレンドリーな口調でユーザーの質問に答えてください。'''
+        system_message = '''あなたは架空のAIキャラクターです。
+        下記の箇条書きの条件を守ってユーザーの質問に答えてください。
+        ・敬語を使わずフレンドリーな口調
+        ・100文字以内'''
         return [
             {'role': 'system', 'content': system_message},
             {'role': 'user', 'content': message}
