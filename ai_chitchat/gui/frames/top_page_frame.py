@@ -7,6 +7,7 @@ from ..theme.colors import BrandColor
 from ..theme.sizes import TopFrameSize, ImageSize
 from ..theme.fonts import TopFrameFont
 from ..theme.images import BrandImagePath, GalleryImagePath
+from lib.generate_image import generate_image
 
 class TopPageFrame(ct.CTkFrame):
     def __init__(self, parent, root, **kwargs):
@@ -69,7 +70,8 @@ class TopPageFrame(ct.CTkFrame):
         )
         # ギャラリータブ
         self.frame_gallery = TabGalleryFrame(
-            self.tabs.tab(UIString.TAB_GALLERY),
+            parent=self.tabs.tab(UIString.TAB_GALLERY),
+            root=self.root,
             fg_color=BrandColor.GRAY
         )
         self.frame_gallery.pack(expand=True)
@@ -82,7 +84,7 @@ class TopPageFrame(ct.CTkFrame):
             height=TopFrameSize.MAIN_BUTTON_HEIGHT,
             font=TopFrameFont.MAIN_BUTTON,
             fg_color=BrandColor.BLUE,
-            command=self.main_button_callback
+            command=self.on_main_button_clicked
         )
         self.main_button.grid(row=2, column=0, padx=0, pady=(10, 30))
 
@@ -108,17 +110,33 @@ class TopPageFrame(ct.CTkFrame):
         self.frame_generate.pack(expand=True)
         self.change_main_button_text()
 
-    def main_button_callback(self):
+    def get_root(self):
+        return self.root
+
+    def get_frame_generate(self):
+        return self.frame_generate
+
+    def get_frame_generated_image(self):
+        return self.frame_generated_image
+
+    def on_main_button_clicked(self):
         button_text = self.main_button.cget('text')
         # 「AI画像を生成する」ボタンを押した時の処理
         if button_text == UIString.GENERATE:
             self._is_image_generated = True
-            self.frame_generate.pack_forget()
-            self.frame_generated_image.pack(expand=True)
-            # 生成された画像を表示
-            generated_image = self.root.get_generated_image()
-            # generated_image = generated_image.resize((ImageSize.WIDTH, ImageSize.HEIGHT))
-            self.frame_generated_image.show_generated_image(generated_image)
+            generate_image(self)
+
+        # 「このキャラクターと話す」ボタンを押した時の処理
+        if button_text == UIString.SELECT_IMAGE:
+            # 選択中の画像のパスを設定
+            if self._current_tab_name == UIString.TAB_GALLERY:
+                selected_image = self.frame_gallery.get_selected_image_path()            
+                self.root.set_image_path(selected_image)
+                print(selected_image)
+            # 設定した画像を表示
+            self.root.recreate_chatpage_frame()
+            # チャットページに遷移
+            self.root.show_frame(UIString.CHAT)
         self.change_main_button_text()
 
 
@@ -153,10 +171,15 @@ class TabGenerateFrame(ct.CTkFrame):
         )
         self.text_box.grid(row=1, column=0, padx=0, pady=(0, 0))
 
+    def get_user_text(self):
+        return self.text_box.get('1.0', 'end')
+
 
 class TabGalleryFrame(ct.CTkFrame):
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, root, **kwargs):
         super().__init__(parent, **kwargs)
+
+        self.root = root
 
         # 3×3でグリッドを設定
         self.columnconfigure(0, weight=1)
@@ -182,11 +205,14 @@ class TabGalleryFrame(ct.CTkFrame):
                     fg_color='transparent',
                     hover_color=BrandColor.BLUE,
                     image=image,
-                    command=lambda i=self._count: self.button_callback(i)
+                    command=lambda i=self._count: self.on_button_clicked(i)
                 )
                 self._images.append(image_button)
                 image_button.grid(row=row, column=col, padx=7, pady=8)
                 self._count += 1
+
+    def get_selected_image_path(self):
+        return self.gallery_images[self._current_index]
 
     def change_images_color(self):
         '''現在選択している画像のみ枠を青くする'''
@@ -196,7 +222,7 @@ class TabGalleryFrame(ct.CTkFrame):
             else:
                 self._images[i].configure(fg_color='transparent')
 
-    def button_callback(self, index):
+    def on_button_clicked(self, index):
         self._current_index = index
         self.change_images_color()
 
@@ -239,7 +265,7 @@ class GeneratedImageFrame(ct.CTkFrame):
         )
         self._cancel_button.grid(row=0, column=2, sticky='ne')
 
-    def show_generated_image(self, generated_image):
+    def update_generated_image(self, generated_image):
         if generated_image is not None:
             image = ct.CTkImage(generated_image, size=(ImageSize.WIDTH, ImageSize.HEIGHT))
             self._image_space.configure(image=image)
