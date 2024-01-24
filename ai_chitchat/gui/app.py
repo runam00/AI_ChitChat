@@ -144,7 +144,7 @@ class App(ct.CTk):
     def get_image_path(self):
         return self._generated_image
     
-    def set_image(self, image):
+    def set_image_path(self, image):
         self._generated_image = image
 
     def get_messages_list(self):

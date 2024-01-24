@@ -13,4 +13,4 @@ def generate_image(frame):
     # 生成された画像を表示
     generated_image = root.get_generated_image()
     # generated_image = generated_image.resize((ImageSize.WIDTH, ImageSize.HEIGHT))
-    frame_generated_image.show_generated_image(generated_image)
+    frame_generated_image.update_generated_image(generated_image)

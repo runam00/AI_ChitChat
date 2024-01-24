@@ -129,11 +129,10 @@ class TopPageFrame(ct.CTkFrame):
         # 「このキャラクターと話す」ボタンを押した時の処理
         if button_text == UIString.SELECT_IMAGE:
             # 選択中の画像のパスを設定
-            if self._current_tab_name == UIString.TAB_GENERATE:
-                selected_image = self.frame_generate
             if self._current_tab_name == UIString.TAB_GALLERY:
-                selected_image = self.frame_gallery.get_selected_image()            
-            self.root.set_image(selected_image)
+                selected_image = self.frame_gallery.get_selected_image_path()            
+                self.root.set_image_path(selected_image)
+                print(selected_image)
             # 設定した画像を表示
             self.root.recreate_chatpage_frame()
             # チャットページに遷移
@@ -212,7 +211,7 @@ class TabGalleryFrame(ct.CTkFrame):
                 image_button.grid(row=row, column=col, padx=7, pady=8)
                 self._count += 1
 
-    def get_selected_image(self):
+    def get_selected_image_path(self):
         return self.gallery_images[self._current_index]
 
     def change_images_color(self):
@@ -266,7 +265,7 @@ class GeneratedImageFrame(ct.CTkFrame):
         )
         self._cancel_button.grid(row=0, column=2, sticky='ne')
 
-    def show_generated_image(self, generated_image):
+    def update_generated_image(self, generated_image):
         if generated_image is not None:
             image = ct.CTkImage(generated_image, size=(ImageSize.WIDTH, ImageSize.HEIGHT))
             self._image_space.configure(image=image)
