@@ -1,17 +1,28 @@
-import subprocess
+import os
+from infrastructure.sadtalker import run_sadtalker
 
 def generate_video(frame):
-    root = frame.get_root()  # Appクラス
-    image = root.get_image_path()  # 画像ファイル(png)
-    audio = root.get_generated_audio()  # 音声ファイル(wav)
+    # Appクラス
+    root = frame.get_root()
+    app_path = root.get_ai_chitchat_dir()
 
-    # 動画を生成する
-    result = run_command([])
-    print(result.stdout)
+    # 画像ファイル(png)
+    image = root.get_image_path()
+    image = os.path.join(app_path, image)
 
-def run_command(command: list):
-    '''シェルコマンドを実行する'''
-    try:
-        return subprocess.run(command, capture_output=True, text=True, shell=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Error: {e}")
+    # 音声ファイル(wav)
+    audio = root.get_generated_audio()
+    audio = os.path.join(app_path, audio)
+
+    # sadtalker
+    webui = root.get_webui_dir()  # webuiのパス
+    sadtalker = 'extensions\SadTalker'  # webuiからsadtalkerまでのパス
+    cwd = os.path.join(webui, sadtalker)  # sadtalkerがあるディレクトリ
+    venv_python = os.path.join(app_path, '.venv\Scripts\python.exe')
+
+    # sadtalkerを実行
+    run_sadtalker(image, audio, cwd, venv_python)
+
+    # 生成された動画のパスを取得
+    root.fetch_generated_video()
+    print('動画が生成されました')

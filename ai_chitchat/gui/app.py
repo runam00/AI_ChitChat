@@ -1,13 +1,13 @@
 import os
 import tempfile
 import shutil
-import ffmpeg
 
 import customtkinter as ct
 import tkinter as tk
 from PIL import Image
 from moviepy.editor import AudioFileClip
 
+from lib.file_utils import read_txt_file, fetch_latest_file
 from .frames.top_page_frame import TopPageFrame
 from .frames.chat_page_frame import ChatPageFrame
 from .frames.sidebar_frame import SidebarFrame
@@ -25,21 +25,27 @@ class App(ct.CTk):
         self._generated_video = None  # 生成されたトーキングフォト動画のパス
         self._messages_list: list[dict[str: str]] = []  # チャットの履歴 {'role': '','content': ''}
 
+        self._ai_chitchat_dir = os.getcwd()  # AI_ChitChatのパス
+        self._webui_dir = None  #weubiが置いてあるディレクトリパス
+
         self._frame_state = FrameState()  # フレームに関する状態を管理する
         self._frame_state.current_mainframe = UIString.TOP  # 初期値はトップページ
 
         ###モック###
-        self._generated_video = 'assets/sample/sample.mp4'
+        self._generated_video = r'assets\sample\sample.mp4'
         self._messages_list = [
             {'role': 'user', 'content': '1回目のメッセージ'},
             {'role': 'AI', 'content': 'プログラミング言語や使用しているフレームワークやライブラリによって異なりますが、一般的には「fetchLatestMessage」や「getLatestMessage」などのような関数名が使われることがあります。ただし、具体的なコンテキストや使用している技術によって最適な関数名が変わる可能性があります。'},
             {'role': 'user', 'content': '3回目のメッセージ'},
             {'role': 'AI', 'content': 'こんにちは、良い天気ですね'},
         ]
-        self._generated_audio = 'assets/sample/test.wav'
-        self._generated_image = 'assets/sample/sample.png'
+        self._generated_audio = r'assets\sample\test.wav'
+        self._generated_image = r'assets\sample\sample.png'
         # self.make_audio()
         ###
+
+        # アプリに必要なツールのパスを設定
+        self.set_tool_path()
 
         # UIを表示
         self.build_ui()
@@ -51,6 +57,9 @@ class App(ct.CTk):
         self.make_temp_dir()
         # プログラム終了時に一時ファイルを削除
         self.protocol("WM_DELETE_WINDOW", self.close_window)
+
+        ### デバッグ　###
+        print(f'webui：{self._webui_dir}')
 
     def build_ui(self):
 
@@ -141,6 +150,12 @@ class App(ct.CTk):
         '''生成された音声ファイルのパスを返す'''
         return self._generated_audio
 
+    def get_webui_dir(self):
+        return self._webui_dir
+
+    def get_ai_chitchat_dir(self):
+        return self._ai_chitchat_dir
+
     def remove_focus(self, event):
         '''クリックした場所が指定されたウィジェットではない場合、フォーカスを外す'''
         # フォーカスを外したいウィジェットの型
@@ -164,6 +179,17 @@ class App(ct.CTk):
             folder_exists = os.path.exists(self._temp_dir)
             print(f"一時フォルダが存在するかどうか: {folder_exists}")
             ###
+
+    def set_tool_path(self):
+        '''dir_path.txtからディレクトリのパスを読み込んで設定する'''
+        webui_path = read_txt_file('dir_path.txt', 'webui')
+        self._webui_dir = webui_path
+
+    def fetch_generated_video(self):
+        '''生成された最新動画のパスを取得する'''
+        # 生成結果が格納されるディレクトリのパス
+        result_dir = os.path.join(self._webui_dir, r'extensions\SadTalker\results')
+        self._generated_video = fetch_latest_file(result_dir)
 
     def close_window(self):
         '''「×」ボタンが押された際にウィンドウを閉じる'''
