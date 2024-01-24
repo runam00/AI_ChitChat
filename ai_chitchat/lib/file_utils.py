@@ -1,4 +1,6 @@
+import os
 import re
+import glob
 
 def read_txt_file(txt_file: str, key: str):
         '''txtファイルからディレクトリのパスを読み込む
@@ -22,3 +24,10 @@ def read_txt_file(txt_file: str, key: str):
                 return match.group(1)
             else:
                 return None
+
+
+def fetch_latest_file(dir_path):
+    '''最新のファイルを取得する'''
+    # 指定のディレクトリ内にある全てのファイルをリストで取得
+    files = glob.glob(os.path.join(dir_path, '*'))
+    return max(files, key=os.path.getctime)

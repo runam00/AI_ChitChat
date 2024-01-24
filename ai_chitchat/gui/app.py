@@ -7,7 +7,7 @@ import tkinter as tk
 from PIL import Image
 from moviepy.editor import AudioFileClip
 
-from lib.file_utils import read_txt_file
+from lib.file_utils import read_txt_file, fetch_latest_file
 from .frames.top_page_frame import TopPageFrame
 from .frames.chat_page_frame import ChatPageFrame
 from .frames.sidebar_frame import SidebarFrame
@@ -184,6 +184,12 @@ class App(ct.CTk):
         '''dir_path.txtからディレクトリのパスを読み込んで設定する'''
         webui_path = read_txt_file('dir_path.txt', 'webui')
         self._webui_dir = webui_path
+
+    def fetch_generated_video(self):
+        '''生成された最新動画のパスを取得する'''
+        # 生成結果が格納されるディレクトリのパス
+        result_dir = os.path.join(self._webui_dir, r'extensions\SadTalker\results')
+        self._generated_video = fetch_latest_file(result_dir)
 
     def close_window(self):
         '''「×」ボタンが押された際にウィンドウを閉じる'''

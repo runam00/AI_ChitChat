@@ -42,6 +42,10 @@ class ChatPageFrame(ct.CTkFrame):
         self.interface_frame.submit_button.configure(state='disabled')
         # チャットメッセージを配置
         add_chat_message(self)
+        # 画像を生成する
+
+        # 音声を生成する
+        
         # 動画を生成する
         generate_video(self)
         # 動画を再生する
