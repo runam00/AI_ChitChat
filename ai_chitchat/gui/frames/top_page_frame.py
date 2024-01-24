@@ -7,6 +7,7 @@ from ..theme.colors import BrandColor
 from ..theme.sizes import TopFrameSize, ImageSize
 from ..theme.fonts import TopFrameFont
 from ..theme.images import BrandImagePath, GalleryImagePath
+from lib.generate_image import generate_image
 
 class TopPageFrame(ct.CTkFrame):
     def __init__(self, parent, root, **kwargs):
@@ -109,21 +110,29 @@ class TopPageFrame(ct.CTkFrame):
         self.frame_generate.pack(expand=True)
         self.change_main_button_text()
 
+    def get_root(self):
+        return self.root
+
+    def get_frame_generate(self):
+        return self.frame_generate
+
+    def get_frame_generated_image(self):
+        return self.frame_generated_image
+
     def on_main_button_clicked(self):
         button_text = self.main_button.cget('text')
         # 「AI画像を生成する」ボタンを押した時の処理
         if button_text == UIString.GENERATE:
             self._is_image_generated = True
-            self.frame_generate.pack_forget()
-            self.frame_generated_image.pack(expand=True)
-            # 生成された画像を表示
-            generated_image = self.root.get_generated_image()
-            # generated_image = generated_image.resize((ImageSize.WIDTH, ImageSize.HEIGHT))
-            self.frame_generated_image.show_generated_image(generated_image)
+            generate_image(self)
+
         # 「このキャラクターと話す」ボタンを押した時の処理
-        elif button_text == UIString.SELECT_IMAGE:
+        if button_text == UIString.SELECT_IMAGE:
             # 選択中の画像のパスを設定
-            selected_image = self.frame_gallery.get_selected_image()
+            if self._current_tab_name == UIString.TAB_GENERATE:
+                selected_image = self.frame_generate
+            if self._current_tab_name == UIString.TAB_GALLERY:
+                selected_image = self.frame_gallery.get_selected_image()            
             self.root.set_image(selected_image)
             # 設定した画像を表示
             self.root.recreate_chatpage_frame()
@@ -162,6 +171,9 @@ class TabGenerateFrame(ct.CTkFrame):
             font=TopFrameFont.TEXT_BOX
         )
         self.text_box.grid(row=1, column=0, padx=0, pady=(0, 0))
+
+    def get_user_text(self):
+        return self.text_box.get('1.0', 'end')
 
 
 class TabGalleryFrame(ct.CTkFrame):

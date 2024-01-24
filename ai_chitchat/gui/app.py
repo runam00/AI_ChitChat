@@ -134,7 +134,6 @@ class App(ct.CTk):
             )
         self._frame_state.mainframes[UIString.CHAT].grid(row=0, column=0, sticky='nsew')
 
-
     def get_generated_image(self):
         '''生成された画像オブジェクトを取得する'''
         ### モック ###
