@@ -47,9 +47,9 @@ class ChatPageFrame(ct.CTkFrame):
         # 音声を生成する
         
         # 動画を生成する
-        generate_video(self)
+        # generate_video(self)
         # 動画を再生する
-        play_video(self)
+        # play_video(self)
         # ボタンを使用可能に戻す
         self.interface_frame.submit_button.configure(state='normal')
 
