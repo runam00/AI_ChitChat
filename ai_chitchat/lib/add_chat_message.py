@@ -1,5 +1,5 @@
 from gui.theme.strings import UIString
-from infrastructure.chatbot import chatbot_send_message
+from infrastructure.chatbot import send_message_chatbot
 
 
 def add_chat_message(frame):
@@ -11,7 +11,7 @@ def add_chat_message(frame):
     place_message(root, history_frame, UIString.ROLE_USER, user_text)
 
     # 返答テキストを取得して配置
-    response = chatbot_send_message(user_text)
+    response = send_message_chatbot(user_text)
     place_message(root, history_frame, UIString.ROLE_AI, response)
 
     # テキストボックスを空にする
