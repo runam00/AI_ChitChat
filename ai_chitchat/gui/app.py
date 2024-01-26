@@ -1,6 +1,4 @@
 import os
-import tempfile
-import shutil
 
 import customtkinter as ct
 import tkinter as tk
@@ -33,15 +31,8 @@ class App(ct.CTk):
 
         ###モック###
         self._generated_video = r'assets\sample\sample.mp4'
-        self._messages_list = [
-            {'role': 'user', 'content': '1回目のメッセージ'},
-            {'role': 'AI', 'content': 'プログラミング言語や使用しているフレームワークやライブラリによって異なりますが、一般的には「fetchLatestMessage」や「getLatestMessage」などのような関数名が使われることがあります。ただし、具体的なコンテキストや使用している技術によって最適な関数名が変わる可能性があります。'},
-            {'role': 'user', 'content': '3回目のメッセージ'},
-            {'role': 'AI', 'content': 'こんにちは、良い天気ですね'},
-        ]
         self._generated_audio = r'assets\sample\test.wav'
         self._generated_image = r'assets\sample\sample.png'
-        # self.make_audio()
         ###
 
         # アプリに必要なツールのパスを設定
@@ -53,13 +44,6 @@ class App(ct.CTk):
         self.show_frame(UIString.TOP)
         # 指定したウィジェット以外の場所をクリックした際、フォーカスを外すためのイベントを設定
         self.bind('<Button-1>', self.remove_focus)
-        # 一時フォルダを作成
-        self.make_temp_dir()
-        # プログラム終了時に一時ファイルを削除
-        self.protocol("WM_DELETE_WINDOW", self.close_window)
-
-        ### デバッグ　###
-        print(f'webui：{self._webui_dir}')
 
     def build_ui(self):
 
@@ -143,7 +127,7 @@ class App(ct.CTk):
 
     def get_image_path(self):
         return self._generated_image
-    
+
     def set_image_path(self, image):
         self._generated_image = image
 
@@ -172,23 +156,6 @@ class App(ct.CTk):
         if type(event.widget) not in widget_types:
             event.widget.master.focus_set()
 
-    def make_temp_dir(self):
-        '''一時フォルダを作成'''
-        self._temp_dir = tempfile.mkdtemp()
-        ### デバッグ ###
-        print(f'一時ファイルパス：{self._temp_dir}')
-        ###
-
-    def delete_temp_file(self):
-        '''一時フォルダを削除'''
-        if self._temp_dir is not None:
-            shutil.rmtree(self._temp_dir)
-            ### デバッグ ###
-            print('一時フォルダ削除')
-            folder_exists = os.path.exists(self._temp_dir)
-            print(f"一時フォルダが存在するかどうか: {folder_exists}")
-            ###
-
     def set_tool_path(self):
         '''dir_path.txtからディレクトリのパスを読み込んで設定する'''
         webui_path = read_txt_file('dir_path.txt', 'webui')
@@ -199,14 +166,6 @@ class App(ct.CTk):
         # 生成結果が格納されるディレクトリのパス
         result_dir = os.path.join(self._webui_dir, r'extensions\SadTalker\results')
         self._generated_video = fetch_latest_file(result_dir)
-
-    def close_window(self):
-        '''「×」ボタンが押された際にウィンドウを閉じる'''
-        # 一時ファイルを削除する
-        self.delete_temp_file()
-        # プログラムを終了
-        self.destroy()
-        self.quit()
 
 
     ###デバッグ用###
