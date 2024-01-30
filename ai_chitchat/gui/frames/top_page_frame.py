@@ -132,7 +132,6 @@ class TopPageFrame(ct.CTkFrame):
             if self._current_tab_name == UIString.TAB_GALLERY:
                 selected_image = self.frame_gallery.get_selected_image_path()            
                 self.root.set_image_path(selected_image)
-                print(selected_image)
             # 設定した画像を表示
             self.root.recreate_chatpage_frame()
             # チャットページに遷移

@@ -67,5 +67,5 @@ class ChatbotClient:
 
 def send_message_chatbot(user_text: str):
     '''チャットボットにメッセージを送信して返答テキストを取得する'''
-    chatbot_client = ChatbotClient('chatgpt')
+    chatbot_client = ChatbotClient('miibo')
     return chatbot_client.generate_response(user_text)

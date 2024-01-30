@@ -166,10 +166,3 @@ class App(ct.CTk):
         # 生成結果が格納されるディレクトリのパス
         result_dir = os.path.join(self._webui_dir, r'extensions\SadTalker\results')
         self._generated_video = fetch_latest_file(result_dir)
-
-
-    ###デバッグ用###
-    def make_audio(self):
-        audio = AudioFileClip(self._generated_video)
-        audio.write_audiofile('assets/sample/test.wav')
-        audio.close()
