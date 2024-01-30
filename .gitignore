@@ -1,3 +1,6 @@
 .venv
 *.pyc
 __pycache__/
+.pytest_cache
+dir_path.txt
+results

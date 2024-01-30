@@ -3,4 +3,4 @@ class BrandColor:
     DARK_GRAY = '#222831'
     LIGHT_GRAY = '#9C9C9C'
     WHITE = '#EEEEEE'
-    BLUE = '#0092CA'
+    BLUE = '#00669F'
