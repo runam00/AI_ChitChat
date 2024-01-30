@@ -9,6 +9,7 @@ from ..theme.fonts import ChatFrameFont
 from ..theme.strings import UIString
 from .video_player import VideoPlayer
 from lib.add_chat_message import add_chat_message
+from lib.generate_audio import generate_audio
 from lib.play_video import play_video
 from lib.generate_video import generate_video
 
@@ -41,15 +42,13 @@ class ChatPageFrame(ct.CTkFrame):
         # ボタンを使用不可にする
         self.interface_frame.submit_button.configure(state='disabled')
         # チャットメッセージを配置
-        add_chat_message(self)
-        # 画像を生成する
-
+        response_text = add_chat_message(self)
         # 音声を生成する
-        
+        generate_audio(self, response_text)
         # 動画を生成する
-        # generate_video(self)
+        generate_video(self)
         # 動画を再生する
-        # play_video(self)
+        play_video(self)
         # ボタンを使用可能に戻す
         self.interface_frame.submit_button.configure(state='normal')
 

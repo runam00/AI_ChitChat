@@ -118,12 +118,15 @@ class App(ct.CTk):
             )
         self._frame_state.mainframes[UIString.CHAT].grid(row=0, column=0, sticky='nsew')
 
+    def get_messages_list(self):
+        return self._messages_list
+
+    def add_message(self, role, content):
+        self._messages_list.append({'role': role, 'content': content})
+
     def get_generated_image(self):
-        '''生成された画像オブジェクトを取得する'''
-        ### モック ###
-        self._generated_image_data = Image.open(self._generated_image)
-        #######
-        return self._generated_image_data
+        '''生成された画像をImageクラスで返す'''
+        return Image.open(self._generated_image)
 
     def get_image_path(self):
         return self._generated_image
@@ -131,17 +134,14 @@ class App(ct.CTk):
     def set_image_path(self, image):
         self._generated_image = image
 
-    def get_messages_list(self):
-        return self._messages_list
+    def get_generated_audio(self):
+        return self._generated_audio
 
-    def add_message(self, role, content):
-        self._messages_list.append({'role': role, 'content': content})
+    def set_generated_audio(self, audio):
+        self._generated_audio = audio
 
     def get_generated_video(self):
         return self._generated_video
-
-    def get_generated_audio(self):
-        return self._generated_audio
 
     def get_webui_dir(self):
         return self._webui_dir
