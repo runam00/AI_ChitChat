@@ -25,7 +25,11 @@ class ChatPageFrame(ct.CTkFrame):
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
 
-        image = self.root.get_generated_image()
+        image_path = self.root.get_image_path()
+        if image_path:
+            image = Image.open(image_path)
+        else:
+            image = None
 
         self.video_player = VideoPlayer(self, width=500, height=500, image=image)
         self.interface_frame = InterfaceFrame(self, root, fg_color='transparent')

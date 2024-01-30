@@ -45,11 +45,9 @@ class SidebarFrame(ct.CTkFrame):
         # ボタンの色を設定
         self.set_buttons_color(self.current_mainframe_name)
 
-
     def generate_icon(self, image_path: str):
         '''ボタンに設定するアイコン画像を出力する'''
         return ct.CTkImage(Image.open(image_path))
-
 
     def set_buttons_color(self, selected: str):
         '''ボタンの選択状態によって、ボタンの色を変える'''
@@ -61,7 +59,6 @@ class SidebarFrame(ct.CTkFrame):
             else:
                 color = 'transparent'
             button.configure(fg_color=color)
-
 
     def button_callback(self, selected: str):
         # フレームの選択状態を更新する

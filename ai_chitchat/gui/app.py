@@ -29,11 +29,7 @@ class App(ct.CTk):
         self._frame_state = FrameState()  # フレームに関する状態を管理する
         self._frame_state.current_mainframe = UIString.TOP  # 初期値はトップページ
 
-        ###モック###
-        self._generated_video = r'assets\sample\sample.mp4'
-        self._generated_audio = r'assets\sample\test.wav'
-        self._generated_image = r'assets\sample\sample.png'
-        ###
+        self._generated_image = 'assets/images/sample01.png'
 
         # アプリに必要なツールのパスを設定
         self.set_tool_path()
@@ -102,6 +98,10 @@ class App(ct.CTk):
     def update_current_mainframe_name(self, new_current_mainframe: str):
         '''現在表示しているフレームの名前を設定する'''
         self._frame_state.current_mainframe = new_current_mainframe
+
+    def update_sidebar_selected(self, selected):
+        '''サイドバーのボタンを押さずに画面遷移した際、サイドバーの選択状況を更新する'''
+        self.sidebar_frame.button_callback(selected)
 
     def show_frame(self, frame_name: str):
         '''引数で指定されたフレームを一番上に表示する'''

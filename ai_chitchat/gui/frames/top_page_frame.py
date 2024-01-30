@@ -137,6 +137,7 @@ class TopPageFrame(ct.CTkFrame):
             self.root.recreate_chatpage_frame()
             # チャットページに遷移
             self.root.show_frame(UIString.CHAT)
+            self.root.update_sidebar_selected(UIString.CHAT)
         self.change_main_button_text()
 
 
