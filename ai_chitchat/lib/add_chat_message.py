@@ -17,6 +17,7 @@ def add_chat_message(frame):
     # テキストボックスを空にする
     interface_frame.user_input_text_box.delete(0, 'end')
 
+    return response
 
 def place_message(root, history_frame, role, text):
     # appクラスのメッセージリストに追加

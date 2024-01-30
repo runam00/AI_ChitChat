@@ -10,7 +10,7 @@ import customtkinter as ct
 from ..theme.colors import BrandColor
 
 class VideoPlayer(ct.CTkFrame):
-    def __init__(self, parent, width, height, image, **kwargs):
+    def __init__(self, parent, width, height, image=None, **kwargs):
         super().__init__(parent, width=width, height=height, **kwargs)
 
         self.width = width
@@ -22,8 +22,9 @@ class VideoPlayer(ct.CTkFrame):
         self.pack(expand=True, fill=tk.BOTH)
 
         # 最初に生成された画像を表示
-        image = image.resize((self.width, self.height))
-        image = ImageTk.PhotoImage(image)
+        if image:
+            image = image.resize((self.width, self.height))
+            image = ImageTk.PhotoImage(image)
 
         # 動画をクリックすると再生が可能になる
         self.start_button = tk.Button(

@@ -13,12 +13,12 @@ class BrandImagePath:
 
 GALLERY_PATH = 'assets/images/'
 class GalleryImagePath(Enum):
-    img1 = GALLERY_PATH + 'monster01.png'
-    img2 = GALLERY_PATH + 'monster02.png'
-    img3 = GALLERY_PATH + 'monster03.png'
-    img4 = GALLERY_PATH + 'monster04.png'
-    img5 = GALLERY_PATH + 'monster05.png'
-    img6 = GALLERY_PATH + 'monster06.png'
+    img1 = GALLERY_PATH + 'sample01.png'
+    img2 = GALLERY_PATH + 'sample02.png'
+    img3 = GALLERY_PATH + 'sample03.png'
+    img4 = GALLERY_PATH + 'sample04.png'
+    img5 = GALLERY_PATH + 'sample05.png'
+    img6 = GALLERY_PATH + 'sample06.png'
 
     @classmethod
     def get_values(cls) -> list:
