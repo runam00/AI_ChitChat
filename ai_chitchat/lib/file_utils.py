@@ -1,6 +1,7 @@
 import os
 import re
 import glob
+import datetime
 
 def read_txt_file(txt_file: str, key: str):
         '''txtファイルからディレクトリのパスを読み込む
@@ -31,3 +32,15 @@ def fetch_latest_file(dir_path):
     # 指定のディレクトリ内にある全てのファイルをリストで取得
     files = glob.glob(os.path.join(dir_path, '*'))
     return max(files, key=os.path.getctime)
+
+
+def generate_filename(prefix, extension):
+    '''
+    現在時刻からファイル名を生成する
+    args:
+        prefix: 先頭につける文字
+        extension: 拡張子('.txt'など）
+    '''
+    # 西暦(4桁)月(2桁)日(2桁)_時(2桁)分(2桁) 例:20240130_0850
+    current_time = datetime.datetime.now().strftime('%Y%m%d_%H%M')
+    return f'{prefix}_{current_time}{extension}'
